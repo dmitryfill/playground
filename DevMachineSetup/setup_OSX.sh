@@ -57,3 +57,13 @@ curl -L http://download.jetbrains.com/idea/ideaIU-134.1342-jdk-bundled.dmg -o id
 hdiutil mount ~/Downloads/ideaIU-134.1342-jdk-bundled.dmg
 sudo cp -Rf /Volumes/IntelliJ\ IDEA\ 13\ EAP/IntelliJ\ IDEA\ 13\ EAP.app /Applications
 
+read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
+
+# 4. Install Charles proxy
+# cd ~/Downloads
+# pwd
+# curl -L http://www.charlesproxy.com/assets/release/3.8.3/charles-proxy-3.8.3a-applejava.dmg -o charles-proxy-3.8.3a-applejava.dmg
+# yes | hdiutil mount -nobrowse -noautoopen -quiet ~/Downloads/charles-proxy-3.8.3a-applejava.dmg
+# sudo cp -Rf /Volumes/IntelliJ\ IDEA\ 13\ EAP/IntelliJ\ IDEA\ 13\ EAP.app /Applications
+
+
