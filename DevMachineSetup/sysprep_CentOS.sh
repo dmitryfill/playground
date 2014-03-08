@@ -41,8 +41,8 @@ rm –rf /var/tmp/*
 # 7. Remove the SSH host keys
 rm –f /etc/ssh/*key*
 
-# 8. Remove the root user’s shell history
-rm -f ~root/.bash_history
+# 8. Remove the user’s shell history
+rm -f ~/.bash_history
 unset HISTFILE
 
 # 9. Flag the system for reconfiguration
@@ -56,11 +56,14 @@ chage -d 0 root
 # cat /etc/sysconfig/network | sed 's/HOSTNAME=.*/HOSTNAME=localhost.local/g'
 sed -i.bak 's/HOSTNAME=.*/HOSTNAME=localhost.local/g' /etc/sysconfig/network 
 
-# 11. PowerOff
+
+
+# 12. PowerOff
+read -t30 -n1 -r -p "Press any key in the next 30 seconds for powering machine off..." key
 poweroff
 
 
-# 12. Zero out all free space
+# 13. Zero out all free space
 # Determine the version of RHEL
 
 # FileSystem='grep ext /etc/mtab| awk -F" " ''{ print $2 }'''
