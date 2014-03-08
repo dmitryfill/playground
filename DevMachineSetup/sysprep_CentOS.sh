@@ -52,6 +52,10 @@ touch /.unconfigured
 usermon -p "" root
 chage -d 0 root
 
+# 11. Rename machine to generic name
+# cat /etc/sysconfig/network | sed 's/HOSTNAME=.*/HOSTNAME=localhost.local/g'
+sed -i.bak 's/HOSTNAME=.*/HOSTNAME=localhost.local/g' /etc/sysconfig/network 
+
 # 11. PowerOff
 poweroff
 
