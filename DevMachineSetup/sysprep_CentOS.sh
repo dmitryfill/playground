@@ -3,6 +3,7 @@
 # This script created based on few sources:
 # http://lonesysadmin.net/2013/03/26/preparing-linux-template-vms/
 # https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Virtualization/3.0/html/Evaluation_Guide/Evaluation_Guide-Create_RHEL_Template.html
+# http://libguestfs.org/virt-sysprep.1.html
 
 # Print version of OS
 cat /etc/redhat-release
@@ -47,11 +48,15 @@ unset HISTFILE
 # 9. Flag the system for reconfiguration
 touch /.unconfigured
 
-# 10. PowerOff
+# 10. Reset root password to blank and enforce to be changed on first login
+usermon -p "" root
+chage -d 0 root
+
+# 11. PowerOff
 poweroff
 
 
-# 11. Zero out all free space
+# 12. Zero out all free space
 # Determine the version of RHEL
 
 # FileSystem='grep ext /etc/mtab| awk -F" " ''{ print $2 }'''
