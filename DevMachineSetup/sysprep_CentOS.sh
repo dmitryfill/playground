@@ -16,8 +16,10 @@ yum -y update && yum -y upgrade
 yum clean all
 
 # 2. Force the logs to rotate
-logrotate –f /etc/logrotate.conf
-rm –f /var/log/*-???????? /var/log/*.gz
+logrotate /etc/logrotate.conf -f -v
+rm /var/log/*-???????? -f -v
+rm /var/log/*.gz -f -v
+
 
 # 3. Clear the audit log & wtmp
 cat /dev/null > /var/log/audit/audit.log
@@ -32,31 +34,29 @@ ifup eth0
 # http://ss64.com/bash/sed.html
 # cat /etc/udev/rules.d/70-persistent-net.rules | grep -v eth0 > /etc/udev/rules.d/70-persistent-net.rules
 #sed -i.bak '/eth0/d' /etc/udev/rules.d/70-persistent-net.rules
-rm -f /etc/udev/rules.d/70*
+rm /etc/udev/rules.d/70* -f -v
 
 # 6. Clean /tmp out
-rm –rf /tmp/*
-rm –rf /var/tmp/*
+rm /tmp/* -rf
+rm /var/tmp/* -rf
 
 # 7. Remove the SSH host keys
-rm –f /etc/ssh/*key*
+rm /etc/ssh/*key* -f -v
 
 # 8. Remove the user’s shell history
-rm -f ~/.bash_history
+rm ~/.bash_history -f -v 
 unset HISTFILE
 
 # 9. Flag the system for reconfiguration
 touch /.unconfigured
 
 # 10. Reset root password to blank and enforce to be changed on first login
-usermon -p "" root
+usermod -p "" root
 chage -d 0 root
 
 # 11. Rename machine to generic name
 # cat /etc/sysconfig/network | sed 's/HOSTNAME=.*/HOSTNAME=localhost.local/g'
 sed -i.bak 's/HOSTNAME=.*/HOSTNAME=localhost.local/g' /etc/sysconfig/network 
-
-
 
 # 12. PowerOff
 read -t30 -n1 -r -p "Press any key in the next 30 seconds for powering machine off..." key
