@@ -95,4 +95,4 @@ poweroff
 #        fi
 # done
 
-
+# Post config - http://www.centos.org/docs/5/html/Deployment_Guide-en-US/s1-networkscripts-interfaces.html
