@@ -2,8 +2,8 @@
 
 # Script to configure Dev Machine and install tools for x64 platform
 clear
-yum -y update
-yum -y upgrade
+sudo yum -y update
+sudo yum -y upgrade
 
 read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 
