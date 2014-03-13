@@ -18,6 +18,9 @@ sed -i "s/Icon=sublime-text/Icon=\/opt\/sublime_text\/Icon\/256x256\/sublime-tex
 chmod 777 ~/Desktop/sublime_text.desktop
 sudo mv -f ~/Downloads/sublime_text_3 /opt/sublime_text
 
+# 1.1 Create a symlink
+ln -s /opt/sublime_text/sublime_text /usr/bin/subl
+
 # 1.2 Install Package Control, and another helpful packages
 wget https://sublime.wbond.net/Package%20Control.sublime-package
 mv -f ~/Downloads/Package\ Control.sublime-package ~/.config/sublime-text-3/Installed\ Packages/
