@@ -44,6 +44,9 @@ sed -i "s/Icon=sublime-text/Icon=\/opt\/sublime_text\/Icon\/256x256\/sublime-tex
 chmod 755 ~/Desktop/sublime_text.desktop
 sudo mv -f ~/Downloads/sublime_text_3 /opt/sublime_text
 
+# 1.1.1 Create a symlink for 'subl'
+sudo ln -s /opt/sublime_text/sublime_text /usr/bin/subl
+
 # 1.2 Install Package Control
 wget https://sublime.wbond.net/Package%20Control.sublime-package
 mkdir -p --verbose ~/.config/sublime-text-3/Installed\ Packages/

@@ -43,7 +43,7 @@ chmod 755 ~/Desktop/sublime_text.desktop
 sudo mv -f ~/Downloads/sublime_text_3 /opt/sublime_text
 
 # 1.1 Create a symlink
-ln -s /opt/sublime_text/sublime_text /usr/bin/subl
+sudo ln -s /opt/sublime_text/sublime_text /usr/bin/subl
 
 # 1.2 Install Package Control, and another helpful packages
 wget https://sublime.wbond.net/Package%20Control.sublime-package
@@ -88,3 +88,10 @@ pwd
 wget http://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin
 chmod u+x cloudera-manager-installer.bin
 # sudo ./cloudera-manager-installer.bin
+
+## Disable SELinux
+# sudo setenforce 0
+# nano /etc/selinux/config
+
+
+
