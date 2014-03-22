@@ -1,4 +1,25 @@
 #!/bin/bash
+
+# 0. Check if user has sudo permissions, if not exit
+## making sure script is not being run under root, if it does just exit
+if [[ $UID -eq 0 ]]
+then 
+    echo 'do NOT run this script under root!'
+    exit 1
+fi
+## invalidate any cached sudo, prompt for password
+sudo -kk
+sudo whoami >/dev/null
+## actually checks if sudo credentials were cached successfully
+if [[ $(sudo whoami) == 'root' ]] 
+then
+    echo 'great! user has sudo!'
+else
+    echo 'Seems like user does not have sudo!'
+    echo 'Please visit this page to read how to grant permissions to user:'
+    echo 'https://www.digitalocean.com/community/articles/how-to-edit-the-sudoers-file-on-ubuntu-and-centos'
+    exit 1
+fi
 # Pretty good explanation on how to make your user account to be in the sudoers file
 # sudo visudo
 # https://www.digitalocean.com/community/articles/how-to-edit-the-sudoers-file-on-ubuntu-and-centos
