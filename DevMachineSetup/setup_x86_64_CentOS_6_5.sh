@@ -47,6 +47,7 @@ ln -s /opt/sublime_text/sublime_text /usr/bin/subl
 
 # 1.2 Install Package Control, and another helpful packages
 wget https://sublime.wbond.net/Package%20Control.sublime-package
+mkdir -p --verbose ~/.config/sublime-text-3/Installed\ Packages/
 mv -f ~/Downloads/Package\ Control.sublime-package ~/.config/sublime-text-3/Installed\ Packages/
 
 read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
