@@ -1,4 +1,7 @@
 #!/bin/bash
+# Pretty good explanation on how to make your user account to be in the sudoers file
+# sudo visudo
+# https://www.digitalocean.com/community/articles/how-to-edit-the-sudoers-file-on-ubuntu-and-centos
 
 # Script to configure Dev Machine and install tools for x64 platform
 clear
