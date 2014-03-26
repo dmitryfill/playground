@@ -66,4 +66,18 @@ read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 # yes | hdiutil mount -nobrowse -noautoopen -quiet ~/Downloads/charles-proxy-3.8.3a-applejava.dmg
 # sudo cp -Rf /Volumes/IntelliJ\ IDEA\ 13\ EAP/IntelliJ\ IDEA\ 13\ EAP.app /Applications
 
+# Sometimes you need to raise num of processes & number of open files for build tools to run faster
+# http://www.lecentre.net/blog/archives/686
+# http://superuser.com/questions/508227/mac-os-x-10-7-4-process-limit
+# https://discussions.apple.com/thread/1154144?tstart=0
+cat /etc/launchd.conf; cat /etc/sysctl.conf; sysctl -a|grep maxproc; ulimit -a;
+
+sudo cat << EOF >> /etc/launchd.conf
+limit maxproc 1536 2048
+limit maxfiles 1024 unlimited
+EOF
+
+cat /etc/launchd.conf; cat /etc/sysctl.conf; sysctl -a|grep maxproc; ulimit -a;
+
+echo $'\n\tReboot required for settings in /etc/launchd.conf to take an effect...\n\n'
 
