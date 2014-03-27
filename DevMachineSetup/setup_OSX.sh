@@ -74,7 +74,7 @@ cat /etc/launchd.conf; cat /etc/sysctl.conf; sysctl -a|grep maxproc; ulimit -a;
 
 sudo cat << EOF >> /etc/launchd.conf
 limit maxproc 1536 2048
-limit maxfiles 1024 unlimited
+limit maxfiles 10240 65536
 EOF
 
 cat /etc/launchd.conf; cat /etc/sysctl.conf; sysctl -a|grep maxproc; ulimit -a;
