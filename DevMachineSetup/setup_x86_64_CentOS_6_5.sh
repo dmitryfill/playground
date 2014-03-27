@@ -43,7 +43,7 @@ chmod 755 ~/Desktop/sublime_text.desktop
 sudo mv -f ~/Downloads/sublime_text_3 /opt/sublime_text
 
 # 1.1 Create a symlink
-sudo ln -s /opt/sublime_text/sublime_text /usr/bin/subl
+sudo ln -snf /opt/sublime_text/sublime_text /usr/bin/subl
 
 # 1.2 Install Package Control, and another helpful packages
 wget https://sublime.wbond.net/Package%20Control.sublime-package
@@ -58,10 +58,10 @@ pwd
 #wget http://download.jetbrains.com/idea/ideaIU-13.0.2.tar.gz
 wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
 tar -xzvf ideaIU-13.1.1.tar.gz
-sudo mv -f ~/Downloads/idea-IU-135.480 /opt/
+sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
 
 # 2.1 Create a symlink
-sudo ln -s /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea 
+sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea 
 
 # 2.2 Create a Desktop shortcut
 cat << EOF >> ~/Desktop/idea.desktop
@@ -82,16 +82,14 @@ EOF
 
 chmod 755 ~/Desktop/idea.desktop
 
-# cloudera install
+# 3. Install latest Git
+
+# 4. Install Ant & Ivy
+
+# 5. Install Gradle
 cd ~/Downloads
 pwd
-wget http://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin
-chmod u+x cloudera-manager-installer.bin
-# sudo ./cloudera-manager-installer.bin
-
-## Disable SELinux
-# sudo setenforce 0
-# nano /etc/selinux/config
-
-
-
+wget http://services.gradle.org/distributions/gradle-1.11-all.zip
+unzip gradle-1.11-all.zip
+sudo mv -fv gradle-1.11 /opt/
+sudo ln -snf /opt/gradle-1.11/bin/gradle /usr/bin/gradle
