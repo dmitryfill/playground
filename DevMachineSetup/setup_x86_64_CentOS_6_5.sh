@@ -82,9 +82,22 @@ EOF
 
 chmod 755 ~/Desktop/idea.desktop
 
-# 3. Install latest Git
+# 3. Install latest Git (1.9.0 at this moment)
+# Need to install asciidoc packages to be able to compile
+sudo yum install -y asciidoc
+ ~/Downloads
+pwd
+wget https://git-core.googlecode.com/files/git-1.9.0.tar.gz
+tar -xzvf git-1.9.0.tar.gz
+cd git-1.9.0
+make configure
+./configure --prefix=/usr
+make all doc
+sudo make install install-doc install-html
 
 # 4. Install Ant & Ivy
+cd ~/Downloads
+pwd
 
 # 5. Install Gradle
 cd ~/Downloads
