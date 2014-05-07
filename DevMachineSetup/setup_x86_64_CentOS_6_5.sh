@@ -57,11 +57,16 @@ cd ~/Downloads
 pwd
 #wget http://download.jetbrains.com/idea/ideaIU-13.0.2.tar.gz
 wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
-tar -xzvf ideaIU-13.1.1.tar.gz
-sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
+wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
+
+#tar -xzvf ideaIU-13.1.1.tar.gz
+tar -xzvf ideaIU-135.815.tar.gz
+#sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
+sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
 
 # 2.1 Create a symlink
-sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea 
+#sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
+sudo ln -snf /opt/idea-IU-135.815/bin/idea.sh /usr/bin/idea 
 
 # 2.2 Create a Desktop shortcut
 cat << EOF >> ~/Desktop/idea.desktop
@@ -74,7 +79,7 @@ Comment=Sophisticated text editor for code, markup and prose
 Exec=/usr/bin/idea %F
 Terminal=false
 MimeType=text/plain;
-Icon=/opt/idea-IU-135.480/bin/idea.png
+Icon=/opt/idea-IU-135.815/bin/idea.png
 Categories=TextEditor;Development;
 StartupNotify=true
 Actions=Window;Document;
@@ -98,6 +103,19 @@ sudo make install install-doc install-html
 # 4. Install Ant & Ivy
 cd ~/Downloads
 pwd
+wget http://apache.mirrors.hoobly.com//ant/binaries/apache-ant-1.9.3-bin.tar.gz
+tar -xzvf apache-ant-1.9.3-bin.tar.gz
+sudo mv -fv ~/Downloads/apache-ant-1.9.3/ /opt/
+sudo ln -snf /opt/apache-ant-1.9.3/bin/ant /usr/bin/ant
+cd ~/Downloads
+pwd
+wget http://archive.apache.org/dist/ant/ivy/2.3.0/apache-ivy-2.3.0-bin-with-deps.tar.gz
+tar -xzvf apache-ivy-2.3.0-bin-with-deps.tar.gz
+sudo mv -fv ~/Downloads/apache-ivy-2.3.0/ /opt/
+cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/
+cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/ivy.jar
+# sudo ln -snf /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /usr/bin/ivy
+
 
 # 5. Install Gradle
 cd ~/Downloads
