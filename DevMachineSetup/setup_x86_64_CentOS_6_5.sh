@@ -56,7 +56,7 @@ read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 cd ~/Downloads
 pwd
 #wget http://download.jetbrains.com/idea/ideaIU-13.0.2.tar.gz
-wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
+#wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
 wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
 
 #tar -xzvf ideaIU-13.1.1.tar.gz
