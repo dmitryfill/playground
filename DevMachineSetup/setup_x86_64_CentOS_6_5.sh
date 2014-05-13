@@ -120,7 +120,9 @@ cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/ivy.jar
 # 5. Install Gradle
 cd ~/Downloads
 pwd
-wget http://services.gradle.org/distributions/gradle-1.11-all.zip
-unzip gradle-1.11-all.zip
-sudo mv -fv gradle-1.11 /opt/
-sudo ln -snf /opt/gradle-1.11/bin/gradle /usr/bin/gradle
+# wget http://services.gradle.org/distributions/gradle-1.11-all.zip
+wget https://services.gradle.org/distributions/gradle-1.12-all.zip
+# unzip gradle-1.11-all.zip
+unzip gradle-1.12-all.zip
+sudo mv -fv gradle-1.12 /opt/
+sudo ln -snf /opt/gradle-1.12/bin/gradle /usr/bin/gradle
