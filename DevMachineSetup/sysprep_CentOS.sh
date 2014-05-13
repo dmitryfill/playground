@@ -56,7 +56,7 @@ chage -d 0 root
 
 # 11. Rename machine to generic name
 # cat /etc/sysconfig/network | sed 's/HOSTNAME=.*/HOSTNAME=localhost.local/g'
-sed -i.bak 's/HOSTNAME=.*/HOSTNAME=localhost.local/g' /etc/sysconfig/network 
+sed -i.bak 's/HOSTNAME=.*/HOSTNAME=localhost.localdomain/g' /etc/sysconfig/network 
 
 # 12. PowerOff
 read -t30 -n1 -r -p "Press any key in the next 30 seconds for powering machine off..." key
