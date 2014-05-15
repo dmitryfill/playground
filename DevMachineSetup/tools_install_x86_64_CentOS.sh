@@ -165,15 +165,129 @@ install_splunk(){
 }
 
 install_haproxy(){
+	# Installing HAProxy from source on Cent OS, example was used from here:
+	# http://myvirtualife.net/2013/08/19/how-to-build-a-load-balancer-with-haproxy/
 	clear
 	cd ~/Downloads
 	pwd 
-	yum -y install openssl-devel pcre-devel
+	sudo yum -y install wget openssl-devel pcre-devel make gcc
 	wget http://haproxy.1wt.eu/download/1.5/src/devel/haproxy-1.5-dev25.tar.gz
 	tar xzf haproxy-1.5-dev25.tar.gz
 	cd haproxy-1.5-dev25
+	make TARGET=linux2628 CPU=x86_64 USE_OPENSSL=1 USE_ZLIB=1 USE_PCRE=1
+	sudo make PREFIX=/opt/haproxy-ssl install
+	sudo ln -snf /opt/haproxy-ssl/sbin/haproxy /usr/sbin/haproxy
+	sudo cp examples/haproxy.init /etc/init.d/haproxy
+	sudo chmod 755 /etc/init.d/haproxy
+	sudo mkdir /etc/haproxy
+	sudo cp examples/examples.cfg /etc/haproxy/haproxy.cfg
+	sudo mkdir /var/lib/haproxy
+	sudo touch /var/lib/haproxy/stats
+	sudo useradd -r haproxy
+	sudo mkdir /etc/haproxy/errors
+	cp -Rv examples/errorfiles/* /etc/haproxy/errors/
 
+	## http://www.virtualtothecore.com/en/balance-multiple-view-connection-servers-using-haproxy/
 
+	# sudo yum -y install keepalived
+	# Before you can load the virtual IP and test it, there are some other configuration changes to be made. First, add this line at the end of the /etc/sysctl.conf file:
+	# net.ipv4.ip_nonlocal_bind = 1
+	
+	# sudo sysctl -p
+	
+	# Extra configuration of iptables is required for keepalived, in particular we must enable support for multicast broadcast packets:
+	# sudo iptables -I INPUT -d 224.0.0.0/8 -j ACCEPT
+
+	# Then, add this rule for the VRRP IP protocol:
+	# sudo iptables -I INPUT -p 112 -j ACCEPT
+	# In addition insert a rule that will correspond with the traffic that you are load balancing, for View is HTTP and HTTPS (by default is only https, but I’m going to create a rule inside HAProxy to redirect http calls to https):
+	# sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+	# sudo iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+
+	# Finally save the iptables config so it will be restored after restarting, and start Keepalived:
+	# sudo service iptables save
+	# sudo service keepalived start
+
+	## Generate OpenSSL certs, original instructions here:
+	# https://gist.github.com/tomdz/5339163
+
+	export CA_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=ca@a-zona.com'
+	export SERVER_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=sysadmin@a-zona.com'
+	export CLIENT_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=user@a-zona.com'
+
+	# certificate authority creation
+	openssl genrsa -out ca.key 4096
+	openssl req -new -x509 -days 365 -key ca.key -out ca.crt -subj "$CA_SUBJECT"
+
+	# server certificate creation
+	openssl genrsa -out server.key 1024
+	openssl req -new -key server.key -out server.csr -subj "$SERVER_SUBJECT"
+	openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
+
+	# client certificate creation
+	openssl genrsa -out client.key 1024
+	openssl req -new -key client.key -out client.csr -subj "$CLIENT_SUBJECT"
+	openssl x509 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 02 -out client.crt
+
+	cat server.crt server.key > server.pem
+	sudo cp server.pem /etc/haproxy/server.pem
+	sudo cp ca.crt /etc/haproxy/ca.crt
+
+	sudo service haproxy check
+	sudo service haproxy start
+	sudo chkconfig haproxy on
+
+}
+
+install_teamcity(){
+	# modified version of original instructions from here:
+	# http://latobcode.wordpress.com/2013/11/26/teamcity-8-on-centos-6-4-from-scratch/
+	wget http://download.jetbrains.com/teamcity/TeamCity-8.1.2.tar.gz
+	tar xzf TeamCity-8.1.2.tar.gz
+	# mv /opt/TeamCity /opt/TeamCity.bak2
+	sudo mv TeamCity /opt/
+	sudo useradd -r teamcity
+	chown -R teamcity:teamcity /opt/TeamCity
+	# sudo touch /etc/init.d/teamcity
+
+	sudo cat << EOF >> /etc/init.d/teamcity
+	#!/bin/bash
+	#
+	# description: TeamCity startup script
+	# /etc/init.d/teamcity
+	#
+	if id -u teamcity >/dev/null 2>&1; then
+		printf '\nUser teamcity already exist, skipping creation...\n';
+	else
+		printf '\nCreating user teamcity...\n';
+		sudo useradd -r teamcity
+	fi
+
+	chown -R teamcity:teamcity /opt/TeamCity
+
+	TEAMCITY_USER=teamcity
+	TEAMCITY_SERVER=/opt/TeamCity/bin/runAll.sh
+
+	case "$1" in
+	start)
+	    sudo -u $TEAMCITY_USER -s -- sh -c "$TEAMCITY_SERVER start"
+	    ;;
+	stop)
+	    sudo -u $TEAMCITY_USER -s -- sh -c "$TEAMCITY_SERVER stop"
+	    ;;
+	*)
+	    echo "Usage: $0 {start|stop}"
+	    exit 1
+	    ;;
+	esac
+
+	exit 0
+	EOF
+
+	sudo chmod 755 /etc/init.d/teamcity
+	sudo service teamcity check
+	sudo chkconfig teamcity on
+	sudo service teamcity start
 }
 
 print_help(){
