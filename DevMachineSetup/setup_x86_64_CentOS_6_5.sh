@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# TODO - Break all into functions and make it accept cmd args
+
 # 0. Check if user has sudo permissions, if not exit
 ## making sure script is not being run under root, if it does just exit
 if [[ $UID -eq 0 ]]
