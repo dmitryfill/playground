@@ -68,6 +68,7 @@ sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
 #sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
 sudo ln -snf /opt/idea-IU-135.815/bin/idea.sh /usr/bin/idea 
 
+rm -fv ~/Desktop/idea.desktop
 # 2.2 Create a Desktop shortcut
 cat << EOF >> ~/Desktop/idea.desktop
 [Desktop Entry]
@@ -88,12 +89,8 @@ EOF
 chmod 755 ~/Desktop/idea.desktop
 
 # 3. Install latest Git (1.9.0 at this moment)
-# Need to install asciidoc packages to be able to compile
-sudo yum install -y asciidoc
-sudo yum install -y zlib-devel
-sudo yum install -y perl-ExtUtils-Embed
-sudo yum install -y gettext
-sudo yum install -y xmlto
+# Need to install following packages to be able to compile
+sudo yum install -y asciidoc zlib-devel perl-ExtUtils-Embed gettext xmlto
  ~/Downloads
 pwd
 wget https://git-core.googlecode.com/files/git-1.9.0.tar.gz
@@ -103,6 +100,39 @@ make configure
 ./configure --prefix=/usr
 make all doc
 sudo make install install-doc install-html
+
+git config --global -l
+# configure Git aliases and gitignore_global
+# TODO - Automate username and email inputs...
+# git config --global user.name "$USER"
+# git config --global user.email "$USEREMAIL@gmail.com"
+git config --global alias.ci "commit -a -v"
+git config --global alias.co "checkout"
+git config --global alias.st "status -v"
+git config --global alias.stat "status -v"
+git config --global alias.smi "submodule init"
+git config --global alias.sms "submodule status"
+git config --global alias.smu "submodule update"
+git config --global alias.br branch
+git config --global alias.wdiff "diff --color-words"
+# If you have a Sublime Text hooked with subl alias or symlink:
+git config --global core.editor subl
+git config --global merge.summary true
+
+cp -vf ../.gitignore ~/.gitignore_global
+#touch ~/.gitignore_global
+git config --global core.excludesfile ~/.gitignore_global
+
+# open ~/.gitignore_global in Sublime
+# subl ~/.gitignore_global
+# Paste al from here and save:
+# https://raw.githubusercontent.com/dmitryfill/Playground/master/.gitignore
+git config --global -l
+
+# git config --local user.name "Xxx Xxx"
+# git config --local user.email xxx@gmail.com
+git config --local -l
+
 
 # 4. Install Ant & Ivy
 cd ~/Downloads
