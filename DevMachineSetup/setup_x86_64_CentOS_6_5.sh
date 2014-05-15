@@ -90,6 +90,10 @@ chmod 755 ~/Desktop/idea.desktop
 # 3. Install latest Git (1.9.0 at this moment)
 # Need to install asciidoc packages to be able to compile
 sudo yum install -y asciidoc
+sudo yum install -y zlib-devel
+sudo yum install -y perl-ExtUtils-Embed
+sudo yum install -y gettext
+sudo yum install -y xmlto
  ~/Downloads
 pwd
 wget https://git-core.googlecode.com/files/git-1.9.0.tar.gz
