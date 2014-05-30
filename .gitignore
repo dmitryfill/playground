@@ -184,3 +184,4 @@ docs/_build/
 .out
 .gradle
 */src/main/generated
+*/src/generated

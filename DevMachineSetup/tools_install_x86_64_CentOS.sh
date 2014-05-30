@@ -54,11 +54,11 @@ install_java7(){
 	# JDK 7
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-linux-x64.tar.gz"
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-linux-x64.tar.gz"
 	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz"
-	tar xvzf jdk-7u45-linux-x64.tar.gz
+	# tar xvzf jdk-7u45-linux-x64.tar.gz
 	tar xvzf jdk-7u51-linux-x64.tar.gz
-	rm jdk-7u45-linux-x64.tar.gz
+	# rm jdk-7u45-linux-x64.tar.gz
 	rm jdk-7u51-linux-x64.tar.gz
 
 	# if [ ! -d '/usr/lib/jvm' ]; then mkdir /usr/lib/jvm; fi && mv /tmp/jdk1.7.0_45 /usr/lib/jvm

@@ -162,3 +162,39 @@ wget https://services.gradle.org/distributions/gradle-1.12-all.zip
 unzip gradle-1.12-all.zip
 sudo mv -fv gradle-1.12 /opt/
 sudo ln -snf /opt/gradle-1.12/bin/gradle /usr/bin/gradle
+
+# 6. Install Oracle Java 7 & Java 8
+install_java7(){
+	cd ~/Downloads
+	pwd
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.rpm"
+	sudo rpm -Uvh jdk-7u55-linux-x64.rpm
+}
+
+install_java8(){
+	# JDK 8
+	cd ~/Downloads
+	pwd
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
+	sudo rpm -Uvh jdk-8u5-linux-x64.rpm
+}
+
+install_maven{
+	cd ~/Downloads
+	pwd
+	wget http://apache.osuosl.org/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.tar.gz
+	tar -xzvf apache-maven-3.2.1-bin.tar.gz
+	sudo mv -v apache-maven-3.2.1 /opt/
+	sudo ln -snf /opt/apache-maven-3.2.1/bin/mvn /usr/bin/mvn
+
+	# http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
+	# mvn install:install-file -Dfile=<path-to-file> -DgroupId=<group-id> -DartifactId=<artifact-id> -Dversion=<version> -Dpackaging=<packaging>
+	# mvn install:install-file -Dfile=<path-to-file> -DpomFile=<path-to-pomfile>
+
+	# http://download.oracle.com/otndocs/jcp/7542-jms-1.1-fr-doc-oth-JSpec/
+	# http://download.oracle.com/otn-pub/jcp/7542-jms-1.1-fr-doc-oth-JSpec/jms-1_1-fr-apidocs.zip
+	# mvn install:install-file -Dfile=/home/df/Downloads/jms1.1/jms/1.1/jms.jar -DpomFile=/home/df/Downloads/jms1.1/jms/1.1/jms-1.1.pom
+}
+
+install_java7
+install_java8
