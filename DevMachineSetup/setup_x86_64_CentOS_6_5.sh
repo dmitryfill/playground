@@ -59,16 +59,20 @@ cd ~/Downloads
 pwd
 #wget http://download.jetbrains.com/idea/ideaIU-13.0.2.tar.gz
 #wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
-wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
+#wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
+wget http://download.jetbrains.com/idea/ideaIU-13.1.4b.tar.gz
 
 #tar -xzvf ideaIU-13.1.1.tar.gz
-tar -xzvf ideaIU-135.815.tar.gz
+#tar -xzvf ideaIU-135.815.tar.gz
+tar -xzvf ideaIU-13.1.4b.tar.gz
 #sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
-sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
+#sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
+sudo mv -fv ~/Downloads/idea-IU-135.1230 /opt/
 
 # 2.1 Create a symlink
 #sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
-sudo ln -snf /opt/idea-IU-135.815/bin/idea.sh /usr/bin/idea 
+#sudo ln -snf /opt/idea-IU-135.815/bin/idea.sh /usr/bin/idea 
+sudo ln -snf /opt/idea-IU-135.1230/bin/idea.sh /usr/bin/idea 
 
 rm -fv ~/Desktop/idea.desktop
 # 2.2 Create a Desktop shortcut
@@ -82,7 +86,7 @@ Comment=Sophisticated text editor for code, markup and prose
 Exec=/usr/bin/idea %F
 Terminal=false
 MimeType=text/plain;
-Icon=/opt/idea-IU-135.815/bin/idea.png
+Icon=/opt/idea-IU-135.1230/bin/idea.png
 Categories=TextEditor;Development;
 StartupNotify=true
 Actions=Window;Document;
@@ -179,7 +183,7 @@ install_java8(){
 	sudo rpm -Uvh jdk-8u5-linux-x64.rpm
 }
 
-install_maven{
+install_maven(){
 	cd ~/Downloads
 	pwd
 	wget http://apache.osuosl.org/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.tar.gz
