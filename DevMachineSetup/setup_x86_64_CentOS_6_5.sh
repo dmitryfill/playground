@@ -1,4 +1,5 @@
 #!/bin/bash
+clear;
 
 # TODO - Break all into functions and make it accept cmd args
 
@@ -26,170 +27,234 @@ fi
 # sudo visudo
 # https://www.digitalocean.com/community/articles/how-to-edit-the-sudoers-file-on-ubuntu-and-centos
 
-# Script to configure Dev Machine and install tools for x64 platform
-clear
-sudo yum -y update
-sudo yum -y upgrade
+# read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 
-read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
+# clear;
 
-clear
 # 1. Download sublime Text 3 beta (on current moment, Jan 25, 2014 - build 3059)
-cd ~/Downloads
-pwd
-wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3059_x64.tar.bz2
-tar -xf sublime_text_3_build_3059_x64.tar.bz2
-cp -f ~/Downloads/sublime_text_3/sublime_text.desktop ~/Desktop/
-sed -i "s/Icon=sublime-text/Icon=\/opt\/sublime_text\/Icon\/256x256\/sublime-text.png/g" ~/Desktop/sublime_text.desktop
-chmod 755 ~/Desktop/sublime_text.desktop
-sudo mv -f ~/Downloads/sublime_text_3 /opt/sublime_text
+install_sublime(){
+	cd ~/Downloads
+	pwd
+	# wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3059_x64.tar.bz2
+	# tar -xf sublime_text_3_build_3059_x64.tar.bz2
+	wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3065_x64.tar.bz2
+	tar -xf sublime_text_3_build_3065_x64.tar.bz2
 
-# 1.1 Create a symlink
-sudo ln -snf /opt/sublime_text/sublime_text /usr/bin/subl
+	sudo mv -f ~/Downloads/sublime_text_3 /opt/
 
-# 1.2 Install Package Control, and another helpful packages
-wget https://sublime.wbond.net/Package%20Control.sublime-package
-mkdir -p --verbose ~/.config/sublime-text-3/Installed\ Packages/
-mv -f ~/Downloads/Package\ Control.sublime-package ~/.config/sublime-text-3/Installed\ Packages/
+	cp -f /opt/sublime_text_3/sublime_text.desktop ~/Desktop/
+	sed -i "s/Icon=sublime-text/Icon=\/opt\/sublime_text_3\/Icon\/256x256\/sublime-text.png/g" ~/Desktop/sublime_text.desktop
+	chmod 755 ~/Desktop/sublime_text.desktop
 
-read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
+	sudo ln -snf /opt/sublime_text_3/sublime_text /usr/bin/subl
 
-# 2. Download and install IntelliJ (on current moment, Jan 25, 2013 - 13 EAP)
-cd ~/Downloads
-pwd
+	# 1.1 Install Package Control, and another helpful packages
+	wget https://sublime.wbond.net/Package%20Control.sublime-package
+	mkdir -p --verbose ~/.config/sublime-text-3/Installed\ Packages/
+	mv -f ~/Downloads/Package\ Control.sublime-package ~/.config/sublime-text-3/Installed\ Packages/
+}
+
+# read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
+
+# 2. Download and install IntelliJ (on current moment, Aug 28, 2014 - 14 EAP)
+install_idea(){
+
+cd ~/Downloads;
+pwd;
 #wget http://download.jetbrains.com/idea/ideaIU-13.0.2.tar.gz
 #wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
-#wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
-wget http://download.jetbrains.com/idea/ideaIU-13.1.4b.tar.gz
+# wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
+# wget http://download.jetbrains.com/idea/ideaIU-138.1696.2.tar.gz
+wget http://download.jetbrains.com/idea/ideaIU-138.2210.3.tar.gz;
 
-#tar -xzvf ideaIU-13.1.1.tar.gz
-#tar -xzvf ideaIU-135.815.tar.gz
-tar -xzvf ideaIU-13.1.4b.tar.gz
-#sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
-#sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
-sudo mv -fv ~/Downloads/idea-IU-135.1230 /opt/
+# tar -xzvf ideaIU-13.1.1.tar.gz
+# tar -xzvf ideaIU-135.815.tar.gz
+# tar -xzvf ideaIU-138.1696.2.tar.gz
+tar -xzvf ideaIU-138.2210.3.tar.gz;
+# sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
+# sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
+# sudo mv -fv ~/Downloads/idea-IU-138.1696.2 /opt/
+sudo mv -fv ~/Downloads/idea-IU-138.2210.3 /opt/;
+
 
 # 2.1 Create a symlink
 #sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
 #sudo ln -snf /opt/idea-IU-135.815/bin/idea.sh /usr/bin/idea 
-sudo ln -snf /opt/idea-IU-135.1230/bin/idea.sh /usr/bin/idea 
+#sudo ln -snf /opt/idea-IU-138.1696.2/bin/idea.sh /usr/bin/idea
+#sudo ln -snf /opt/idea-IU-138.1696.2 /opt/idea14 
 
-rm -fv ~/Desktop/idea.desktop
+sudo ln -snf /opt/idea-IU-138.2210.3/bin/idea.sh /usr/bin/idea;
+sudo ln -snf /opt/idea-IU-138.2210.3 /opt/idea14;
+
+
+rm -fv ~/Desktop/idea14.desktop;
 # 2.2 Create a Desktop shortcut
-cat << EOF >> ~/Desktop/idea.desktop
+cat << EOF >> ~/Desktop/idea14.desktop
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=IntelliJ IDEA 13.1
+Name=IntelliJ IDEA 14 EAP
 GenericName=Text Editor
 Comment=Sophisticated text editor for code, markup and prose
 Exec=/usr/bin/idea %F
 Terminal=false
 MimeType=text/plain;
-Icon=/opt/idea-IU-135.1230/bin/idea.png
+Icon=/opt/idea14/bin/idea.png
 Categories=TextEditor;Development;
 StartupNotify=true
 Actions=Window;Document;
 EOF
 
-chmod 755 ~/Desktop/idea.desktop
+chmod 755 ~/Desktop/idea14.desktop;
 
-# 3. Install latest Git (1.9.0 at this moment)
-# Need to install following packages to be able to compile
-sudo yum install -y asciidoc zlib-devel perl-ExtUtils-Embed gettext xmlto
- ~/Downloads
-pwd
-wget https://git-core.googlecode.com/files/git-1.9.0.tar.gz
-tar -xzvf git-1.9.0.tar.gz
-cd git-1.9.0
-make configure
-./configure --prefix=/usr
-make all doc
-sudo make install install-doc install-html
+}
 
-git config --global -l
-# configure Git aliases and gitignore_global
-# TODO - Automate username and email inputs...
-# git config --global user.name "$USER"
-# git config --global user.email "$USEREMAIL@gmail.com"
-git config --global alias.ci "commit -a -v"
-git config --global alias.co "checkout"
-git config --global alias.st "status -v"
-git config --global alias.stat "status -v"
-git config --global alias.smi "submodule init"
-git config --global alias.sms "submodule status"
-git config --global alias.smu "submodule update"
-git config --global alias.br branch
-git config --global alias.wdiff "diff --color-words"
-# If you have a Sublime Text hooked with subl alias or symlink:
-git config --global core.editor subl
-git config --global merge.summary true
+# 3. Install latest Git (2.1.0 at this moment)
+install_git(){
+	~/Downloads
+	pwd
 
-cp -vf ../.gitignore ~/.gitignore_global
-#touch ~/.gitignore_global
-git config --global core.excludesfile ~/.gitignore_global
+	# sudo yum -y --enablerepo=*epel* 
+	# sudo yum install docbook2X
 
-# open ~/.gitignore_global in Sublime
-# subl ~/.gitignore_global
-# Paste al from here and save:
-# https://raw.githubusercontent.com/dmitryfill/Playground/master/.gitignore
-git config --global -l
+	# Need to install following packages to be able to compile
+	sudo yum -y install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils asciidoc xmlto docbook2X
+	# docbook2x-texi
+	# wget http://tcpdiag.dl.sourceforge.net/project/docbook2x/docbook2x/0.8.8/docbook2X-0.8.8.tar.gz
+	# tar -xzvf docbook2X-0.8.8.tar.gz
+	# sudo mv -fv docbook2X-0.8.8 /opt/
+	# sudo ln -s /opt/docbook2X-0.8.8/bin/ /usr/bin/docbook2x-texi
+	sudo ln -snf /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
 
-# git config --local user.name "Xxx Xxx"
-# git config --local user.email xxx@gmail.com
-git config --local -l
+	# wget https://git-core.googlecode.com/files/git-1.9.0.tar.gz
+	wget https://www.kernel.org/pub/software/scm/git/git-2.1.0.tar.gz
+	# tar -xzvf git-1.9.0.tar.gz
+	tar -xzvf git-2.1.0.tar.gz
+	sudo mv -fv git-2.1.0 /opt/
+	# cd git-1.9.0
+	cd /opt/git-2.1.0/
 
+	make configure
+	./configure --prefix=/usr
+	make all doc
+	sudo make install install-doc install-html install-info
+
+	# make prefix=/usr all doc info ;# as yourself
+	# sudo make prefix=/usr install install-doc install-html install-info ;# as root
+
+	git config --global -l
+	# configure Git aliases and gitignore_global
+	# TODO - Automate username and email inputs...
+	# git config --global user.name "$USER"
+	# git config --global user.email "$USEREMAIL@gmail.com"
+
+	# If you have a Sublime Text hooked with subl alias or symlink:
+	git config --global core.editor subl
+	git config --global merge.summary true
+	git config --global rerere.enabled true
+
+	git config --global alias.br "branch -v"
+	git config --global alias.c "checkout -f"
+	git config --global alias.cfg "config -l"
+	git config --global alias.cfgg "config --global -l"
+	git config --global alias.cfgl "config --local -l"
+	git config --global alias.ci "commit -a -v"
+	git config --global alias.co "checkout"
+	git config --global alias.dc "diff --cached"
+	git config --global alias.df diff
+	git config --global alias.lg "log -p"
+	git config --global alias.ll = "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate --numstat"
+	git config --global alias.lol "log --graph --decorate --pretty=oneline --abbrev-commit"
+	git config --global alias.lola "log --graph --decorate --pretty=oneline --abbrev-commit --all"
+	git config --global alias.ls = "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate"
+	git config --global alias.lsf "ls-files"
+	git config --global alias.lsfe "ls-files -o -i --exclude-standard"
+	git config --global alias.lt "log --graph --oneline --decorate --all"
+	git config --global alias.revert "reset --hard"
+	git config --global alias.smi "submodule init"
+	git config --global alias.sms "submodule status"
+	git config --global alias.smu "submodule update"
+	git config --global alias.st "status"
+	git config --global alias.stat "status -v"
+	git config --global alias.wdiff "diff --color-words"
+
+	wget https://raw.githubusercontent.com/dmitryfill/Playground/master/.gitignore -o ~/.gitignore_global 
+	git config --global core.excludesfile ~/.gitignore_global
+
+	git config --global -l
+
+	# git config --local user.name "Xxx Xxx"
+	# git config --local user.email xxx@gmail.com
+	git config --local -l
+}
 
 # 4. Install Ant & Ivy
-cd ~/Downloads
-pwd
-wget http://apache.mirrors.hoobly.com//ant/binaries/apache-ant-1.9.3-bin.tar.gz
-tar -xzvf apache-ant-1.9.3-bin.tar.gz
-sudo mv -fv ~/Downloads/apache-ant-1.9.3/ /opt/
-sudo ln -snf /opt/apache-ant-1.9.3/bin/ant /usr/bin/ant
-cd ~/Downloads
-pwd
-wget http://archive.apache.org/dist/ant/ivy/2.3.0/apache-ivy-2.3.0-bin-with-deps.tar.gz
-tar -xzvf apache-ivy-2.3.0-bin-with-deps.tar.gz
-sudo mv -fv ~/Downloads/apache-ivy-2.3.0/ /opt/
-cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/
-cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/ivy.jar
-# sudo ln -snf /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /usr/bin/ivy
+install_ant_ivy(){
+	cd ~/Downloads
+	pwd
+	wget http://apache.mirrors.hoobly.com//ant/binaries/apache-ant-1.9.3-bin.tar.gz
+	tar -xzvf apache-ant-1.9.3-bin.tar.gz
+	sudo mv -fv ~/Downloads/apache-ant-1.9.3/ /opt/
+	sudo ln -snf /opt/apache-ant-1.9.3/bin/ant /usr/bin/ant
+	cd ~/Downloads
+	pwd
+	wget http://archive.apache.org/dist/ant/ivy/2.3.0/apache-ivy-2.3.0-bin-with-deps.tar.gz
+	tar -xzvf apache-ivy-2.3.0-bin-with-deps.tar.gz
+	sudo mv -fv ~/Downloads/apache-ivy-2.3.0/ /opt/
+	cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/
+	cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/ivy.jar
+	# sudo ln -snf /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /usr/bin/ivy
+}
 
 
 # 5. Install Gradle
-cd ~/Downloads
-pwd
-# wget http://services.gradle.org/distributions/gradle-1.11-all.zip
-wget https://services.gradle.org/distributions/gradle-1.12-all.zip
-# unzip gradle-1.11-all.zip
-unzip gradle-1.12-all.zip
-sudo mv -fv gradle-1.12 /opt/
-sudo ln -snf /opt/gradle-1.12/bin/gradle /usr/bin/gradle
+install_gradle(){
+	cd ~/Downloads
+	pwd
+	# wget http://services.gradle.org/distributions/gradle-1.11-all.zip
+	# wget https://services.gradle.org/distributions/gradle-1.12-all.zip
+	wget https://services.gradle.org/distributions/gradle-2.0-all.zip
+	# unzip gradle-1.11-all.zip
+	# unzip gradle-1.12-all.zip
+	unzip gradle-2.0-all.zip
+	# sudo mv -fv gradle-1.12 /opt/
+	sudo mv -fv gradle-2.0 /opt/
+	# sudo ln -snf /opt/gradle-1.12/bin/gradle /usr/bin/gradle
+	sudo ln -snf /opt/gradle-2.0/bin/gradle /usr/bin/gradle
+}
 
 # 6. Install Oracle Java 7 & Java 8
 install_java7(){
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.rpm"
-	sudo rpm -Uvh jdk-7u55-linux-x64.rpm
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.rpm"
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm"
+	
+	sudo rpm -Uvh jdk-7u67-linux-x64.rpm
 }
 
 install_java8(){
 	# JDK 8
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
-	sudo rpm -Uvh jdk-8u5-linux-x64.rpm
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm"
+	
+	# sudo rpm -Uvh jdk-8u5-linux-x64.rpm
+	sudo rpm -Uvh jdk-8u20-linux-x64.rpm
 }
 
 install_maven(){
 	cd ~/Downloads
 	pwd
-	wget http://apache.osuosl.org/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.tar.gz
-	tar -xzvf apache-maven-3.2.1-bin.tar.gz
-	sudo mv -v apache-maven-3.2.1 /opt/
-	sudo ln -snf /opt/apache-maven-3.2.1/bin/mvn /usr/bin/mvn
+	# wget http://apache.osuosl.org/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.tar.gz
+	wget http://apache.arvixe.com/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz
+	# tar -xzvf apache-maven-3.2.1-bin.tar.gz
+	tar -xzvf apache-maven-3.2.3-bin.tar.gz
+	# sudo mv -v apache-maven-3.2.1 /opt/
+	sudo mv -v apache-maven-3.2.3 /opt/
+	# sudo ln -snf /opt/apache-maven-3.2.1/bin/mvn /usr/bin/mvn
+	sudo ln -snf /opt/apache-maven-3.2.3/bin/mvn /usr/bin/mvn
 
 	# http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
 	# mvn install:install-file -Dfile=<path-to-file> -DgroupId=<group-id> -DartifactId=<artifact-id> -Dversion=<version> -Dpackaging=<packaging>
@@ -200,5 +265,149 @@ install_maven(){
 	# mvn install:install-file -Dfile=/home/df/Downloads/jms1.1/jms/1.1/jms.jar -DpomFile=/home/df/Downloads/jms1.1/jms/1.1/jms-1.1.pom
 }
 
+
+print_help(){
+	printf '\nUsage:\n';
+	printf "$0 [option]\n\n";
+	printf 'options:\n';
+	printf '\t-y\tAssumes yes on all prompts, unattented mode\n\t\twill install default set of tools (IDEA, git, gradle, maven, etc)\n\n';
+	printf '\t-h\tShows help\n';
+	printf '\n\n';
+	exit 0;
+}
+
+adding_epel_repo(){
+	printf '\n\nChecking OS version...\n'
+	if grep -q -i "release 6" /etc/redhat-release; then
+		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
+		cd ~/Downloads
+		## RHEL/CentOS 6.x 64-Bit ##
+		wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+		rpm -ivh epel-release-6-8.noarch.rpm;
+	elif grep -q -i "release 7" /etc/redhat-release; then
+		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
+	else
+		echo 'Unsupported OS version, skipping addition of EPEL Repository. Exiting...\n\n';
+		exit 1;
+	fi
+
+	# clear
+	sudo yum -y update;
+	sudo yum -y upgrade;
+}
+
+# How To Enable EPEL Repository in RHEL/CentOS 7/6/5?
+# http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/
+
+## RHEL/CentOS 7 64-Bit ##
+# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
+# wget http://linux.mirrors.es.net/fedora-epel//7/x86_64/epel-release-7-0.2.noarch.rpm
+# wget http://mirror.metrocast.net/fedora/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
+# rpm -ivh epel-release-7-0.2.noarch.rpm
+
+
+# Evaluating command line argument
+# if [[ $1 =~ [-y] ]]; then
+# 	UNATTEND='y';
+# fi
+
+case $1 in
+	'-y' ) UNATTEND='y';;
+	* ) print_help;;
+esac
+
+### 1. Adding EPEL Repo
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Add EPEL Repository? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	adding_epel_repo;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+### 2. Installing Java7
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install Oracle Java SDK 1.7? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_java7;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+### 3. Installing Java8
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install Oracle Java SDK 1.8? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_java8;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+### 3. Installing Gradle & Maven
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install build tools (Gradle, maven)? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_gradle;
+	install_maven;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+### 3. Installing Sublime & IDEA
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install build tools (Gradle, maven)? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_sublime;
+	install_idea;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+exit 0;
+
 install_java7
 install_java8
+install_maven
+install_gradle
+install_idea
+install_sublime
