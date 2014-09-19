@@ -16,7 +16,7 @@ sudo whoami >/dev/null
 ## actually checks if sudo credentials were cached successfully
 if [[ $(sudo whoami) == 'root' ]] 
 then
-    echo 'great! user has sudo!'
+    printf '\nGreat! User has sudo, continue...\n\n'
 else
     echo 'Seems like user does not have sudo!'
     echo 'Please visit this page to read how to grant permissions to user:'

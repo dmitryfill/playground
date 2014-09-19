@@ -1,5 +1,14 @@
 #!/bin/bash
 clear
+
+# Make hidden files visible in Finder
+defaults write com.apple.finder AppleShowAllFiles TRUE
+killall Finder
+
+# Get Git 1.9.2
+curl -L http://softlayer-dal.dl.sourceforge.net/project/git-osx-installer/git-1.9.2-intel-universal-snow-leopard.dmg -o git-1.9.2-intel-universal-snow-leopard.dmg
+hdiutil mount ~/Downloads/git-1.9.2-intel-universal-snow-leopard.dmg
+
 # 1. Download sublime Text 3 beta (on current moment, Feb 25, 2014 - build 3059)
 cd ~/Downloads
 pwd
@@ -37,25 +46,28 @@ alias l='ls -lahG'
 alias ll='ls -lahGF'
 alias cls='clear'
 alias md='mkdir'
+alias ns='sudo lsof -i -n -P|grep LISTEN'
+
+gup() { clear; pwd -P; git remote -v; git status -v; git branch -v; git remote -v update; git pull --all -v; }
+
+gettxt() { curl -i -H "Accept: text/plain" -X GET $*; printf '\n\n'; }
+getjson() { curl -i -H "Accept: application/json" -X GET $*; printf '\n\n'; }
+postjson() { curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X POST $*; printf '\n\n'; }
+
+ff() { find . -iname "$*" -print; }
+rmr() { find . -type f -iname "$*" -delete; }
 
 # Setting $PATH
 EOF
 
 read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 
-# 3. Install IntelliJ IDEA 13
+# 3. Install IntelliJ IDEA 13.1
 cd ~/Downloads
 pwd
-curl -L http://download-ln.jetbrains.com/idea/ideaIU-13.0.2.dmg -o ideaIU-13.0.2.dmg
-hdiutil mount ~/Downloads/ideaIU-13.0.2.dmg
-sudo cp -Rf /Volumes/IntelliJ\ IDEA\ 13/IntelliJ\ IDEA\ 13.app /Applications
-
-# 3. Install IntelliJ IDEA 13.1 EAP
-cd ~/Downloads
-pwd
-curl -L http://download.jetbrains.com/idea/ideaIU-134.1342-jdk-bundled.dmg -o ideaIU-134.1342-jdk-bundled.dmg
-hdiutil mount ~/Downloads/ideaIU-134.1342-jdk-bundled.dmg
-sudo cp -Rf /Volumes/IntelliJ\ IDEA\ 13\ EAP/IntelliJ\ IDEA\ 13\ EAP.app /Applications
+curl -L http://download-ln.jetbrains.com/idea/ideaIU-135.1019-jdk-bundled.dmg -o ideaIU-135.1019-jdk-bundled.dmg
+hdiutil mount ~/Downloads/ideaIU-135.1019-jdk-bundled.dmg
+sudo cp -Rfv /Volumes/IntelliJ\ IDEA\ 13/IntelliJ\ IDEA\ 13.app /Applications
 
 read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 
@@ -81,3 +93,8 @@ cat /etc/launchd.conf; cat /etc/sysctl.conf; sysctl -a|grep maxproc; ulimit -a;
 
 echo $'\n\tReboot required for settings in /etc/launchd.conf to take an effect...\n\n'
 
+img2iso(){
+	# original script taken from here:
+	## http://forums.appleinsider.com/t/159955/howto-create-bootable-mavericks-iso
+	
+}
