@@ -310,11 +310,14 @@ adding_epel_repo(){
 # if [[ $1 =~ [-y] ]]; then
 # 	UNATTEND='y';
 # fi
-
-case $1 in
-	'-y' ) UNATTEND='y';;
-	* ) print_help;;
-esac
+if [ -z $1 ]; then
+	printf '\nNo options specified, running in manual mode...\n\n';
+else
+	case $1 in
+		'-y' ) UNATTEND='y';;
+		* ) print_help;;
+	esac;
+fi
 
 ### 1. Adding EPEL Repo
 if [[ $UNATTEND != 'y' ]]; then
