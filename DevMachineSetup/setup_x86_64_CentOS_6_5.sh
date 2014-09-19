@@ -332,8 +332,7 @@ if [[ $ANSWER =~ [Yy]$ ]]; then
 	ANSWER='';
 #	exit 0;
 else
-	printf '\nNo response. Exiting.. Bye...\n\n';
-	exit 0;
+	printf '\nSkipping...\n\n';
 fi
 
 ### 2. Installing Java7
@@ -349,8 +348,7 @@ if [[ $ANSWER =~ [Yy]$ ]]; then
 	ANSWER='';
 #	exit 0;
 else
-	printf '\nNo response. Exiting.. Bye...\n\n';
-	exit 0;
+	printf '\nSkipping...\n\n';
 fi
 
 ### 3. Installing Java8
@@ -366,11 +364,26 @@ if [[ $ANSWER =~ [Yy]$ ]]; then
 	ANSWER='';
 #	exit 0;
 else
-	printf '\nNo response. Exiting.. Bye...\n\n';
-	exit 0;
+	printf '\nSkipping...\n\n';
 fi
 
-### 3. Installing Gradle & Maven
+### 4. Installing latest Git
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install latest Git? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_git;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nSkipping...\n\n';
+fi
+
+### 5. Installing Gradle & Maven
 if [[ $UNATTEND != 'y' ]]; then
 	read -t30 -n1 -p 'Install build tools (Gradle, maven)? Will exit in 30 seconds if no response (y/n): ' ANSWER;
 	printf '\n';
@@ -384,13 +397,12 @@ if [[ $ANSWER =~ [Yy]$ ]]; then
 	ANSWER='';
 #	exit 0;
 else
-	printf '\nNo response. Exiting.. Bye...\n\n';
-	exit 0;
+	printf '\nSkipping...\n\n';
 fi
 
-### 3. Installing Sublime & IDEA
+### 6. Installing Sublime & IDEA
 if [[ $UNATTEND != 'y' ]]; then
-	read -t30 -n1 -p 'Install build tools (Gradle, maven)? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	read -t30 -n1 -p 'Install IDEs (Sublime Text, IDEA)? Will exit in 30 seconds if no response (y/n): ' ANSWER;
 	printf '\n';
 else
 	ANSWER='y';
@@ -402,9 +414,9 @@ if [[ $ANSWER =~ [Yy]$ ]]; then
 	ANSWER='';
 #	exit 0;
 else
-	printf '\nNo response. Exiting.. Bye...\n\n';
-	exit 0;
+	printf '\nSkipping...\n\n';
 fi
+
 
 exit 0;
 
