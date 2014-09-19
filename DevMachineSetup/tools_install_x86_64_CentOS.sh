@@ -1,5 +1,8 @@
 #!/bin/bash
-clear
+clear;
+
+# TODO - Break all into functions and make it accept cmd args
+
 # 0. Check if user has sudo permissions, if not exit
 ## making sure script is not being run under root, if it does just exit
 if [[ $UID -eq 0 ]]
@@ -24,324 +27,387 @@ fi
 # sudo visudo
 # https://www.digitalocean.com/community/articles/how-to-edit-the-sudoers-file-on-ubuntu-and-centos
 
-# Get latest updates
-os_updates(){
-	clear;
-	sudo yum -y update;
-	sudo yum -y upgrade;
-}
+# read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 
-# 0. Get Oracle Java JDK
-# http://forums.linuxmint.com/viewtopic.php?f=197&t=149068
-install_java6(){
-	# JDK 6
+# clear;
+
+# 1. Download sublime Text 3 beta (on current moment, Jan 25, 2014 - build 3059)
+install_sublime(){
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/6u45-b06/jdk-6u45-linux-x64.bin"
-	# chmod +x jdk-6u45-linux-x64.bin
-	# ./jdk-6u45-linux-x64.bin
-	# sudo mv jdk1.6.0_45 /usr/lib/jvm/
+	# wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3059_x64.tar.bz2
+	# tar -xf sublime_text_3_build_3059_x64.tar.bz2
+	wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3065_x64.tar.bz2
+	tar -xf sublime_text_3_build_3065_x64.tar.bz2
 
-	# update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.6.0_45/bin/java 1065
-	# update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.6.0_45/bin/javac 1065
-	# update-alternatives --install /usr/bin/jar jar /usr/lib/jvm/jdk1.6.0_45/bin/jar 1065
-	# update-alternatives --install /usr/bin/javaws javaws /usr/lib/jvm/jdk1.6.0_45/bin/javaws 1065
-	# update-alternatives --install /usr/bin/javadoc javadoc /usr/lib/jvm/jdk1.6.0_45/bin/javadoc 1065
-	# update-alternatives --config java
+	sudo mv -f ~/Downloads/sublime_text_3 /opt/
+
+	cp -f /opt/sublime_text_3/sublime_text.desktop ~/Desktop/
+	sed -i "s/Icon=sublime-text/Icon=\/opt\/sublime_text_3\/Icon\/256x256\/sublime-text.png/g" ~/Desktop/sublime_text.desktop
+	chmod 755 ~/Desktop/sublime_text.desktop
+
+	sudo ln -snf /opt/sublime_text_3/sublime_text /usr/bin/subl
+
+	# 1.1 Install Package Control, and another helpful packages
+	wget https://sublime.wbond.net/Package%20Control.sublime-package
+	mkdir -p --verbose ~/.config/sublime-text-3/Installed\ Packages/
+	mv -f ~/Downloads/Package\ Control.sublime-package ~/.config/sublime-text-3/Installed\ Packages/
 }
 
+# read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
+
+# 2. Download and install IntelliJ (on current moment, Aug 28, 2014 - 14 EAP)
+install_idea(){
+
+cd ~/Downloads;
+pwd;
+#wget http://download.jetbrains.com/idea/ideaIU-13.0.2.tar.gz
+#wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
+# wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
+# wget http://download.jetbrains.com/idea/ideaIU-138.1696.2.tar.gz
+wget http://download.jetbrains.com/idea/ideaIU-138.2210.3.tar.gz;
+
+# tar -xzvf ideaIU-13.1.1.tar.gz
+# tar -xzvf ideaIU-135.815.tar.gz
+# tar -xzvf ideaIU-138.1696.2.tar.gz
+tar -xzvf ideaIU-138.2210.3.tar.gz;
+# sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
+# sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
+# sudo mv -fv ~/Downloads/idea-IU-138.1696.2 /opt/
+sudo mv -fv ~/Downloads/idea-IU-138.2210.3 /opt/;
+
+
+# 2.1 Create a symlink
+#sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
+#sudo ln -snf /opt/idea-IU-135.815/bin/idea.sh /usr/bin/idea 
+#sudo ln -snf /opt/idea-IU-138.1696.2/bin/idea.sh /usr/bin/idea
+#sudo ln -snf /opt/idea-IU-138.1696.2 /opt/idea14 
+
+sudo ln -snf /opt/idea-IU-138.2210.3/bin/idea.sh /usr/bin/idea;
+sudo ln -snf /opt/idea-IU-138.2210.3 /opt/idea14;
+
+
+rm -fv ~/Desktop/idea14.desktop;
+# 2.2 Create a Desktop shortcut
+cat << EOF >> ~/Desktop/idea14.desktop
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IntelliJ IDEA 14 EAP
+GenericName=Text Editor
+Comment=Sophisticated text editor for code, markup and prose
+Exec=/usr/bin/idea %F
+Terminal=false
+MimeType=text/plain;
+Icon=/opt/idea14/bin/idea.png
+Categories=TextEditor;Development;
+StartupNotify=true
+Actions=Window;Document;
+EOF
+
+chmod 755 ~/Desktop/idea14.desktop;
+
+}
+
+# 3. Install latest Git (2.1.0 at this moment)
+install_git(){
+	~/Downloads
+	pwd
+
+	# sudo yum -y --enablerepo=*epel* 
+	# sudo yum install docbook2X
+
+	# Need to install following packages to be able to compile
+	sudo yum -y install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils asciidoc xmlto docbook2X
+	# docbook2x-texi
+	# wget http://tcpdiag.dl.sourceforge.net/project/docbook2x/docbook2x/0.8.8/docbook2X-0.8.8.tar.gz
+	# tar -xzvf docbook2X-0.8.8.tar.gz
+	# sudo mv -fv docbook2X-0.8.8 /opt/
+	# sudo ln -s /opt/docbook2X-0.8.8/bin/ /usr/bin/docbook2x-texi
+	sudo ln -snf /usr/bin/db2x_docbook2texi /usr/bin/docbook2x-texi
+
+	# wget https://git-core.googlecode.com/files/git-1.9.0.tar.gz
+	wget https://www.kernel.org/pub/software/scm/git/git-2.1.0.tar.gz
+	# tar -xzvf git-1.9.0.tar.gz
+	tar -xzvf git-2.1.0.tar.gz
+	sudo mv -fv git-2.1.0 /opt/
+	# cd git-1.9.0
+	cd /opt/git-2.1.0/
+
+	make configure
+	./configure --prefix=/usr
+	make all doc
+	sudo make install install-doc install-html install-info
+
+	# make prefix=/usr all doc info ;# as yourself
+	# sudo make prefix=/usr install install-doc install-html install-info ;# as root
+
+	git config --global -l
+	# configure Git aliases and gitignore_global
+	# TODO - Automate username and email inputs...
+	# git config --global user.name "$USER"
+	# git config --global user.email "$USEREMAIL@gmail.com"
+
+	# If you have a Sublime Text hooked with subl alias or symlink:
+	git config --global core.editor subl
+	git config --global merge.summary true
+	git config --global rerere.enabled true
+
+	git config --global alias.br "branch -v"
+	git config --global alias.c "checkout -f"
+	git config --global alias.cfg "config -l"
+	git config --global alias.cfgg "config --global -l"
+	git config --global alias.cfgl "config --local -l"
+	git config --global alias.ci "commit -a -v"
+	git config --global alias.co "checkout"
+	git config --global alias.dc "diff --cached"
+	git config --global alias.df diff
+	git config --global alias.lg "log -p"
+	git config --global alias.ll = "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate --numstat"
+	git config --global alias.lol "log --graph --decorate --pretty=oneline --abbrev-commit"
+	git config --global alias.lola "log --graph --decorate --pretty=oneline --abbrev-commit --all"
+	git config --global alias.ls = "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate"
+	git config --global alias.lsf "ls-files"
+	git config --global alias.lsfe "ls-files -o -i --exclude-standard"
+	git config --global alias.lt "log --graph --oneline --decorate --all"
+	git config --global alias.revert "reset --hard"
+	git config --global alias.smi "submodule init"
+	git config --global alias.sms "submodule status"
+	git config --global alias.smu "submodule update"
+	git config --global alias.st "status"
+	git config --global alias.stat "status -v"
+	git config --global alias.wdiff "diff --color-words"
+
+	wget https://raw.githubusercontent.com/dmitryfill/Playground/master/.gitignore -o ~/.gitignore_global 
+	git config --global core.excludesfile ~/.gitignore_global
+
+	git config --global -l
+
+	# git config --local user.name "Xxx Xxx"
+	# git config --local user.email xxx@gmail.com
+	git config --local -l
+}
+
+# 4. Install Ant & Ivy
+install_ant_ivy(){
+	cd ~/Downloads
+	pwd
+	wget http://apache.mirrors.hoobly.com//ant/binaries/apache-ant-1.9.3-bin.tar.gz
+	tar -xzvf apache-ant-1.9.3-bin.tar.gz
+	sudo mv -fv ~/Downloads/apache-ant-1.9.3/ /opt/
+	sudo ln -snf /opt/apache-ant-1.9.3/bin/ant /usr/bin/ant
+	cd ~/Downloads
+	pwd
+	wget http://archive.apache.org/dist/ant/ivy/2.3.0/apache-ivy-2.3.0-bin-with-deps.tar.gz
+	tar -xzvf apache-ivy-2.3.0-bin-with-deps.tar.gz
+	sudo mv -fv ~/Downloads/apache-ivy-2.3.0/ /opt/
+	cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/
+	cp /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /opt/apache-ant-1.9.3/lib/ivy.jar
+	# sudo ln -snf /opt/apache-ivy-2.3.0/ivy-2.3.0.jar /usr/bin/ivy
+}
+
+
+# 5. Install Gradle
+install_gradle(){
+	cd ~/Downloads
+	pwd
+	# wget http://services.gradle.org/distributions/gradle-1.11-all.zip
+	# wget https://services.gradle.org/distributions/gradle-1.12-all.zip
+	wget https://services.gradle.org/distributions/gradle-2.0-all.zip
+	# unzip gradle-1.11-all.zip
+	# unzip gradle-1.12-all.zip
+	unzip gradle-2.0-all.zip
+	# sudo mv -fv gradle-1.12 /opt/
+	sudo mv -fv gradle-2.0 /opt/
+	# sudo ln -snf /opt/gradle-1.12/bin/gradle /usr/bin/gradle
+	sudo ln -snf /opt/gradle-2.0/bin/gradle /usr/bin/gradle
+}
+
+# 6. Install Oracle Java 7 & Java 8
 install_java7(){
-	# JDK 7
 	cd ~/Downloads
 	pwd
-	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-linux-x64.tar.gz"
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz"
-	# tar xvzf jdk-7u45-linux-x64.tar.gz
-	tar xvzf jdk-7u51-linux-x64.tar.gz
-	# rm jdk-7u45-linux-x64.tar.gz
-	rm jdk-7u51-linux-x64.tar.gz
-
-	# if [ ! -d '/usr/lib/jvm' ]; then mkdir /usr/lib/jvm; fi && mv /tmp/jdk1.7.0_45 /usr/lib/jvm
-
-	# sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.7.0_45/bin/java 1065
-	# sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.7.0_45/bin/javac 1065
-	# sudo update-alternatives --install /usr/bin/jar jar /usr/lib/jvm/jdk1.7.0_45/bin/jar 1065
-	# sudo update-alternatives --install /usr/bin/javaws javaws /usr/lib/jvm/jdk1.7.0_45/bin/javaws 1065
-	# sudo update-alternatives --install /usr/bin/javadoc javadoc /usr/lib/jvm/jdk1.7.0_45/bin/javadoc 1065
-	# sudo update-alternatives --config java
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.rpm"
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm"
+	
+	sudo rpm -Uvh jdk-7u67-linux-x64.rpm
 }
 
 install_java8(){
 	# JDK 8
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.tar.gz"
-}
-
-
-install_cdh5(){
-	clear
-	# 1. Get Cloudera CDH 5
-	cd ~/Downloads
-	pwd
-	wget http://archive.cloudera.com/cm5/installer/latest/cloudera-manager-installer.bin
-	chmod u+x cloudera-manager-installer.bin
-
-	wget http://archive.cloudera.com/cdh5/one-click-install/redhat/6/x86_64/cloudera-cdh-5-0.x86_64.rpm
-	sudo yum --nogpgcheck localinstall cloudera-cdh-5-0.x86_64.rpm
-
-	## Disable SELinux
-	# sudo setenforce 0
-	# nano /etc/selinux/config
-
-	# sudo ./cloudera-manager-installer.bin
-
-	sudo sysctl -a |grep swapp
-	# vm.swappiness = 60
-	sudo sysctl -w vm.swappiness=0
-	# vm.swappiness = 0
-	sudo sysctl -a |grep swapp
-
-	# Disabling swappiness per cloudera recommendation
-	# vm.swappiness =	0
-
-	# Disable ipv4 firewall	
-}
-
-
-install_kafka(){
-	clear
-	# 2. Get Kafka
-	cd ~/Downloads
-	pwd
-	# wget https://www.apache.org/dyn/closer.cgi?path=/kafka/0.8.1/kafka_2.10-0.8.1.tgz
-	wget ftp://apache.mirrors.tds.net/pub/apache.org/kafka/0.8.1/kafka_2.9.2-0.8.1.tgz
-	tar xvzf kafka_2.9.2-0.8.1.tgz
-	sudo mv -f ~/Downloads/kafka_2.9.2-0.8.1/ /opt/
-
-	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-0.properties
-	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-1.properties
-	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-2.properties	
-}
-
-install_splunk(){
-	clear
-	# 2. Get Splunk
-	cd ~/Downloads
-	pwd
-	rm -Rf ~/Downloads/splunk
-	# wget -O splunk-6.0.2-196940-Linux-x86_64.tgz 'http://www.splunk.com/page/download_track?file=6.0.2/splunk/linux/splunk-6.0.2-196940-Linux-x86_64.tgz&ac=&wget=true&name=wget&platform=Linux&architecture=x86_64&version=6.0.2&product=splunk&typed=release'
-	wget -O splunk-6.1.0-206881-Linux-x86_64.tgz 'http://www.splunk.com/page/download_track?file=6.1.0/splunk/linux/splunk-6.1.0-206881-Linux-x86_64.tgz&ac=&wget=true&name=wget&platform=Linux&architecture=x86_64&version=6.1.0&product=splunk&typed=release'
-	#tar xvzf splunk-6.0.2-196940-Linux-x86_64.tgz
-	tar xzf splunk-6.1.0-206881-Linux-x86_64.tgz
-
-	sudo service splunk stop
-	sudo /opt/splunk/bin/splunk stop
-
-	sudo mv -f /opt/splunk /opt/splunk.bak
-	sudo mv -f splunk /opt/
-
-	# http://docs.splunk.com/Documentation/Splunk/latest/Installation/InstallonLinux
-	if id -u splunksvc >/dev/null 2>&1; then
-		printf '\nUser splunksvc already exist, skipping creation...\n';
-	else
-		printf '\nCreating user splunksvc...\n';
-		sudo useradd splunksvc
-	fi
-
-	sudo chown -R splunksvc:splunksvc /opt/splunk
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm"
 	
-	# cd /opt/splunk/bin/
-	sudo /opt/splunk/bin/splunk enable boot-start -user splunksvc
-	sudo /opt/splunk/bin/splunk start --accept-license --answer-yes
-	sudo service splunk start
-	sudo service splunk status	
-
-	# Get Splunk SDK java sources 
-	mkdir -p ~/git
-	cd ~/git
-	pwd
-	git clone https://github.com/splunk/splunk-sdk-java.git
+	# sudo rpm -Uvh jdk-8u5-linux-x64.rpm
+	sudo rpm -Uvh jdk-8u20-linux-x64.rpm
 }
 
-install_haproxy(){
-	# Installing HAProxy from source on Cent OS, example was used from here:
-	# http://myvirtualife.net/2013/08/19/how-to-build-a-load-balancer-with-haproxy/
-	clear
+install_maven(){
 	cd ~/Downloads
-	pwd 
-	sudo yum -y install wget openssl-devel pcre-devel make gcc
-	wget http://haproxy.1wt.eu/download/1.5/src/devel/haproxy-1.5-dev25.tar.gz
-	tar xzf haproxy-1.5-dev25.tar.gz
-	cd haproxy-1.5-dev25
-	make TARGET=linux2628 CPU=x86_64 USE_OPENSSL=1 USE_ZLIB=1 USE_PCRE=1
-	sudo make PREFIX=/opt/haproxy-ssl install
-	sudo ln -snf /opt/haproxy-ssl/sbin/haproxy /usr/sbin/haproxy
-	sudo cp examples/haproxy.init /etc/init.d/haproxy
-	sudo chmod 755 /etc/init.d/haproxy
-	sudo mkdir /etc/haproxy
-	sudo cp examples/examples.cfg /etc/haproxy/haproxy.cfg
-	sudo mkdir /var/lib/haproxy
-	sudo touch /var/lib/haproxy/stats
-	sudo useradd -r haproxy
-	sudo mkdir /etc/haproxy/errors
-	cp -Rv examples/errorfiles/* /etc/haproxy/errors/
+	pwd
+	# wget http://apache.osuosl.org/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.tar.gz
+	wget http://apache.arvixe.com/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz
+	# tar -xzvf apache-maven-3.2.1-bin.tar.gz
+	tar -xzvf apache-maven-3.2.3-bin.tar.gz
+	# sudo mv -v apache-maven-3.2.1 /opt/
+	sudo mv -v apache-maven-3.2.3 /opt/
+	# sudo ln -snf /opt/apache-maven-3.2.1/bin/mvn /usr/bin/mvn
+	sudo ln -snf /opt/apache-maven-3.2.3/bin/mvn /usr/bin/mvn
 
-	## http://www.virtualtothecore.com/en/balance-multiple-view-connection-servers-using-haproxy/
+	# http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
+	# mvn install:install-file -Dfile=<path-to-file> -DgroupId=<group-id> -DartifactId=<artifact-id> -Dversion=<version> -Dpackaging=<packaging>
+	# mvn install:install-file -Dfile=<path-to-file> -DpomFile=<path-to-pomfile>
 
-	# sudo yum -y install keepalived
-	# Before you can load the virtual IP and test it, there are some other configuration changes to be made. First, add this line at the end of the /etc/sysctl.conf file:
-	# net.ipv4.ip_nonlocal_bind = 1
-	
-	# sudo sysctl -p
-	
-	# Extra configuration of iptables is required for keepalived, in particular we must enable support for multicast broadcast packets:
-	# sudo iptables -I INPUT -d 224.0.0.0/8 -j ACCEPT
-
-	# Then, add this rule for the VRRP IP protocol:
-	# sudo iptables -I INPUT -p 112 -j ACCEPT
-	# In addition insert a rule that will correspond with the traffic that you are load balancing, for View is HTTP and HTTPS (by default is only https, but I’m going to create a rule inside HAProxy to redirect http calls to https):
-	# sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
-	# sudo iptables -I INPUT -p tcp --dport 443 -j ACCEPT
-
-	# Finally save the iptables config so it will be restored after restarting, and start Keepalived:
-	# sudo service iptables save
-	# sudo service keepalived start
-
-	## Generate OpenSSL certs, original instructions here:
-	# https://gist.github.com/tomdz/5339163
-
-	export CA_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=ca@a-zona.com'
-	export SERVER_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=sysadmin@a-zona.com'
-	export CLIENT_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=user@a-zona.com'
-
-	# certificate authority creation
-	openssl genrsa -out ca.key 4096
-	openssl req -new -x509 -days 365 -key ca.key -out ca.crt -subj "$CA_SUBJECT"
-
-	# server certificate creation
-	openssl genrsa -out server.key 1024
-	openssl req -new -key server.key -out server.csr -subj "$SERVER_SUBJECT"
-	openssl x509 -req -days 365 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
-
-	# client certificate creation
-	openssl genrsa -out client.key 1024
-	openssl req -new -key client.key -out client.csr -subj "$CLIENT_SUBJECT"
-	openssl x509 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 02 -out client.crt
-
-	cat server.crt server.key > server.pem
-	sudo cp server.pem /etc/haproxy/server.pem
-	sudo cp ca.crt /etc/haproxy/ca.crt
-
-	sudo service haproxy check
-	sudo service haproxy start
-	sudo chkconfig haproxy on
-
+	# http://download.oracle.com/otndocs/jcp/7542-jms-1.1-fr-doc-oth-JSpec/
+	# http://download.oracle.com/otn-pub/jcp/7542-jms-1.1-fr-doc-oth-JSpec/jms-1_1-fr-apidocs.zip
+	# mvn install:install-file -Dfile=/home/df/Downloads/jms1.1/jms/1.1/jms.jar -DpomFile=/home/df/Downloads/jms1.1/jms/1.1/jms-1.1.pom
 }
 
-install_teamcity(){
-	# modified version of original instructions from here:
-	# http://latobcode.wordpress.com/2013/11/26/teamcity-8-on-centos-6-4-from-scratch/
-	wget http://download.jetbrains.com/teamcity/TeamCity-8.1.2.tar.gz
-	tar xzf TeamCity-8.1.2.tar.gz
-	# mv /opt/TeamCity /opt/TeamCity.bak2
-	sudo mv TeamCity /opt/
-	sudo useradd -r teamcity
-	chown -R teamcity:teamcity /opt/TeamCity
-	# sudo touch /etc/init.d/teamcity
-
-	sudo cat << EOF >> /etc/init.d/teamcity
-	#!/bin/bash
-	#
-	# description: TeamCity startup script
-	# /etc/init.d/teamcity
-	#
-	if id -u teamcity >/dev/null 2>&1; then
-		printf '\nUser teamcity already exist, skipping creation...\n';
-	else
-		printf '\nCreating user teamcity...\n';
-		sudo useradd -r teamcity
-	fi
-
-	chown -R teamcity:teamcity /opt/TeamCity
-
-	TEAMCITY_USER=teamcity
-	TEAMCITY_SERVER=/opt/TeamCity/bin/runAll.sh
-
-	case "$1" in
-	start)
-	    sudo -u $TEAMCITY_USER -s -- sh -c "$TEAMCITY_SERVER start"
-	    ;;
-	stop)
-	    sudo -u $TEAMCITY_USER -s -- sh -c "$TEAMCITY_SERVER stop"
-	    ;;
-	*)
-	    echo "Usage: $0 {start|stop}"
-	    exit 1
-	    ;;
-	esac
-
-	exit 0
-	EOF
-
-	sudo chmod 755 /etc/init.d/teamcity
-	sudo service teamcity check
-	sudo chkconfig teamcity on
-	sudo service teamcity start
-}
 
 print_help(){
-	printf '\n\n'
-	printf 'This script is installs different tools, depending on the option you select:\n';
-	printf '\n--<arg> Command line parameters\n\tX. Interactive option selection\n'
-	printf '\n--all\n\t0. Install All (Java 6 JDK, Java 7 JDK, Java 8 JDK, Cloudera CDH5, Splunk, Kafka) - Default';
-	printf '\n--j6\n\t1. Install Java 6 JDK only';
-	printf '\n--j7\n\t2. Install Java 7 JDK only';
-	printf '\n--j8\n\t3. Install Java 8 JDK only';
-	printf '\n--j\n\t4. Install Java 6 JDK, Java 7 JDK & Java 8 JDK';
-	printf '\n--cdh5\n\t5. Install Cloudera CDH5 only';
-	printf '\n--splunk\n\t6. Install Splunk only';
-	printf '\n--kafka\n\t7. Install Kafka only';
-
-	printf '\n\n\t9. Exit'
-	printf '\n\n'
+	printf '\nUsage:\n';
+	printf "$0 [option]\n\n";
+	printf 'options:\n';
+	printf '\t-y\tAssumes yes on all prompts, unattented mode\n\t\twill install default set of tools (IDEA, git, gradle, maven, etc)\n\n';
+	printf '\t-h\tShows help\n';
+	printf '\n\n';
+	exit 0;
 }
 
+adding_epel_repo(){
+	printf '\n\nChecking OS version...\n'
+	if grep -q -i "release 6" /etc/redhat-release; then
+		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
+		cd ~/Downloads
+		## RHEL/CentOS 6.x 64-Bit ##
+		wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+		rpm -ivh epel-release-6-8.noarch.rpm;
+	elif grep -q -i "release 7" /etc/redhat-release; then
+		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
+	else
+		echo 'Unsupported OS version, skipping addition of EPEL Repository. Exiting...\n\n';
+		exit 1;
+	fi
 
-os_updates
+	# clear
+	sudo yum -y update;
+	sudo yum -y upgrade;
+}
 
-if [[ $* == '' ]]; then
-	#statements
-	print_help
-	read -t30 -n1 -r -p 'Please select your option in next 30 seconds: ' KEY
+# How To Enable EPEL Repository in RHEL/CentOS 7/6/5?
+# http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/
 
-	printf '\n\n'
-	printf 'KEY = %d' $KEY
-	printf '\narg[] = %s' $*
-	printf '\n\n'
+## RHEL/CentOS 7 64-Bit ##
+# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
+# wget http://linux.mirrors.es.net/fedora-epel//7/x86_64/epel-release-7-0.2.noarch.rpm
+# wget http://mirror.metrocast.net/fedora/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
+# rpm -ivh epel-release-7-0.2.noarch.rpm
 
-	case $KEY in
-		0)
-			printf '\nKEY == 0, option --all\n';;
-		1)
-			printf '\nKEY == 1, option --j6\n';;
-		6)
-			printf '\nKEY == 6, option --splunk\n'; install_splunk;;
-		*)
-			printf '\nUnknown option, exit\n\n'; exit;;
-	esac
+
+# Evaluating command line argument
+# if [[ $1 =~ [-y] ]]; then
+# 	UNATTEND='y';
+# fi
+
+case $1 in
+	'-y' ) UNATTEND='y';;
+	* ) print_help;;
+esac
+
+### 1. Adding EPEL Repo
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Add EPEL Repository? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
 else
-	printf '\n\n'
-	printf 'KEY = %d' $KEY
-	printf '\narg[] = %s' $*
-	printf '\n\n'
-
-
+	ANSWER='y';
 fi
 
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	adding_epel_repo;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
 
-printf '\n ===========[ END ]========================\n\n'
+### 2. Installing Java7
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install Oracle Java SDK 1.7? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
 
-# read -t30 -n1 -r -p "Press any key in the next 30 seconds..." KEY
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_java7;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
 
+### 3. Installing Java8
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install Oracle Java SDK 1.8? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
 
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_java8;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+### 3. Installing Gradle & Maven
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install build tools (Gradle, maven)? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_gradle;
+	install_maven;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+### 3. Installing Sublime & IDEA
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install build tools (Gradle, maven)? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_sublime;
+	install_idea;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nNo response. Exiting.. Bye...\n\n';
+	exit 0;
+fi
+
+exit 0;
+
+install_java7
+install_java8
+install_maven
+install_gradle
+install_idea
+install_sublime
