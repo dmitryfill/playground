@@ -185,7 +185,7 @@ install_git(){
 
 	# git config --local user.name "Xxx Xxx"
 	# git config --local user.email xxx@gmail.com
-	git config --local -l
+	# git config --local -l
 }
 
 # 4. Install Ant & Ivy
@@ -228,9 +228,26 @@ install_java7(){
 	cd ~/Downloads
 	pwd
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.rpm"
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm"
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm";
 	
-	sudo rpm -Uvh jdk-7u67-linux-x64.rpm
+	sudo rpm -Uvh jdk-7u67-linux-x64.rpm;
+
+	# echo -e '3\n' | sudo alternatives --config java;
+
+	### http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_67/bin/java 200000;
+	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.7.0_67/bin/javaws 200000; 
+	## Java Browser (Mozilla) Plugin 32-bit ##
+	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.7.0_67/jre/lib/i386/libnpjp2.so 200000; 
+	## Java Browser (Mozilla) Plugin 64-bit ##
+	# sudo alternatives --install /usr/lib64/mozilla/plugins/libjavaplugin.so libjavaplugin.so.x86_64 /usr/java/jdk1.7.0_67/jre/lib/amd64/libnpjp2.so 200000;
+
+	## Install javac only if you installed JDK (Java Development Kit) package ##
+	# sudo alternatives --install /usr/bin/javac javac /usr/java/jdk1.7.0_67/bin/javac 200000;
+	# sudo alternatives --install /usr/bin/jar jar /usr/java/jdk1.7.0_67/bin/jar 200000;
+
+	# echo -e '3\n' | sudo alternatives --config java;
+	alternatives_java_latest_install;
 }
 
 install_java8(){
@@ -238,10 +255,60 @@ install_java8(){
 	cd ~/Downloads
 	pwd
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm"
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm";
 	
 	# sudo rpm -Uvh jdk-8u5-linux-x64.rpm
-	sudo rpm -Uvh jdk-8u20-linux-x64.rpm
+	sudo rpm -Uvh jdk-8u20-linux-x64.rpm;
+
+	# echo -e '3\n' | sudo alternatives --config java;
+	
+	### http://www.if-not-true-then-false.com/2014/install-oracle-java-8-on-fedora-centos-rhel/
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_20/bin/java 200000;
+	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.8.0_20/bin/javaws 200000; 
+	## Java Browser (Mozilla) Plugin 32-bit ##
+	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.8.0_20/jre/lib/i386/libnpjp2.so 200000; 
+	## Java Browser (Mozilla) Plugin 64-bit ##
+	# sudo alternatives --install /usr/lib64/mozilla/plugins/libjavaplugin.so libjavaplugin.so.x86_64 /usr/java/jdk1.8.0_20/jre/lib/amd64/libnpjp2.so 200000;
+
+	## Install javac only if you installed JDK (Java Development Kit) package ##
+	# sudo alternatives --install /usr/bin/javac javac /usr/java/jdk1.8.0_20/bin/javac 200000;
+	# sudo alternatives --install /usr/bin/jar jar /usr/java/jdk1.8.0_20/bin/jar 200000;
+
+	alternatives_java_latest_install;
+}
+
+alternatives_java_latest_install(){
+	latestid=$(echo -e '\n'| sudo alternatives --config java |grep '/usr/java/latest/'| sed 's/^[+* \t]*//'|awk '{print $1}');
+	
+	# echo -e "$latestid\n";
+
+	# echo -e '\n'| sudo alternatives --config java;
+
+	if [ -z $latestid ]; then 
+		printf 'Installing /usr/java/latest/...\n'; 
+		break;
+		### http://wiki.centos.org/HowTos/JavaRuntimeEnvironment
+		sudo alternatives --install /usr/bin/java java /usr/java/latest/bin/java 200000;
+		# sudo alternatives --install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000;
+		 
+		## Java Browser (Mozilla) Plugin 32-bit ##
+		# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/latest/jre/lib/i386/libnpjp2.so 200000;
+		## Java Browser (Mozilla) Plugin 64-bit ##
+		# sudo alternatives --install /usr/lib64/mozilla/plugins/libjavaplugin.so libjavaplugin.so.x86_64 /usr/java/latest/jre/lib/amd64/libnpjp2.so 200000;
+		 
+		## Install javac only if you installed JDK (Java Development Kit) package ##
+		# sudo alternatives --install /usr/bin/javac javac /usr/java/latest/bin/javac 200000;
+		# sudo alternatives --install /usr/bin/jar jar /usr/java/latest/bin/jar 200000;
+	fi
+
+	latestid=$(echo -e '\n'| sudo alternatives --config java |grep '/usr/java/latest/'| sed 's/^[+* \t]*//'|awk '{print $1}');
+	
+	echo -e '\n\n'| sudo alternatives --config java;
+
+	printf 'Setting default java to latest... ($latestid)';
+	echo -e "$latestid\n\n"| sudo alternatives --config java; 
+	# maxid=$(echo -e '\n'| sudo alternatives --config java |grep 'There are '| awk '{print $3}');
+	printf '\n\n';
 }
 
 install_maven(){
@@ -345,6 +412,7 @@ fi
 
 if [[ $ANSWER =~ [Yy]$ ]]; then 
 	install_java7;
+	alternatives_java_install;
 	ANSWER='';
 #	exit 0;
 else
@@ -361,6 +429,7 @@ fi
 
 if [[ $ANSWER =~ [Yy]$ ]]; then 
 	install_java8;
+	alternatives_java_install;
 	ANSWER='';
 #	exit 0;
 else
