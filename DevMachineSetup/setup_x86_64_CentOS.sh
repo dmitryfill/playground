@@ -370,8 +370,9 @@ adding_epel_repo(){
 	elif grep -q -i "release 7" /etc/redhat-release; then
 		printf 'Adding EPEL Repository for CentOS 7.x x86_64:\n\n';
 		# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
-		rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm;
-		rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm;
+		# rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm;
+		rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
+		rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm;
 	else
 		echo 'Unsupported OS version, skipping addition of EPEL Repository. Exiting...\n\n';
 		exit 1;
