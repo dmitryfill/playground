@@ -368,7 +368,7 @@ adding_epel_repo(){
 	sudo yum -y upgrade;
 }
 
-install_tigervnc(){
+install_xrdp(){
 	if [ -z $(yum repolist|grep -i epel) ]; then
 		printf 'Installing EPEL Repository...'
 		adding_epel_repo;
@@ -434,7 +434,6 @@ fi
 
 if [[ $ANSWER =~ [Yy]$ ]]; then 
 	install_java7;
-	alternatives_java_install;
 	ANSWER='';
 #	exit 0;
 else
@@ -451,7 +450,6 @@ fi
 
 if [[ $ANSWER =~ [Yy]$ ]]; then 
 	install_java8;
-	alternatives_java_install;
 	ANSWER='';
 #	exit 0;
 else
@@ -502,6 +500,22 @@ fi
 if [[ $ANSWER =~ [Yy]$ ]]; then 
 	install_sublime;
 	install_idea;
+	ANSWER='';
+#	exit 0;
+else
+	printf '\nSkipping...\n\n';
+fi
+
+### 7. Installing TigerVMC & RDP
+if [[ $UNATTEND != 'y' ]]; then
+	read -t30 -n1 -p 'Install TigerVNC & XRDP? Will exit in 30 seconds if no response (y/n): ' ANSWER;
+	printf '\n';
+else
+	ANSWER='y';
+fi
+
+if [[ $ANSWER =~ [Yy]$ ]]; then 
+	install_xrdp;
 	ANSWER='';
 #	exit 0;
 else
