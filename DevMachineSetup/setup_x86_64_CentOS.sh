@@ -348,16 +348,30 @@ print_help(){
 	exit 0;
 }
 
+# How To Enable EPEL Repository in RHEL/CentOS 7/6/5?
+# http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/
+
+## RHEL/CentOS 7 64-Bit ##
+# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
+# wget http://linux.mirrors.es.net/fedora-epel//7/x86_64/epel-release-7-0.2.noarch.rpm
+# wget http://mirror.metrocast.net/fedora/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
+# rpm -ivh epel-release-7-0.2.noarch.rpm
+
 adding_epel_repo(){
 	printf '\n\nChecking OS version...\n'
 	if grep -q -i "release 6" /etc/redhat-release; then
 		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
 		cd ~/Downloads
 		## RHEL/CentOS 6.x 64-Bit ##
-		wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
-		rpm -ivh epel-release-6-8.noarch.rpm;
+		# wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+		# rpm -ivh epel-release-6-8.noarch.rpm;
+		rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+
 	elif grep -q -i "release 7" /etc/redhat-release; then
-		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
+		printf 'Adding EPEL Repository for CentOS 7.x x86_64:\n\n';
+		# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
+		rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm;
+		rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-1.el7.nux.noarch.rpm;
 	else
 		echo 'Unsupported OS version, skipping addition of EPEL Repository. Exiting...\n\n';
 		exit 1;
@@ -367,6 +381,10 @@ adding_epel_repo(){
 	sudo yum -y update;
 	sudo yum -y upgrade;
 }
+
+## Adding TigerVNC and XRDP to support RDP clients from Windows
+## http://ajmatson.net/wordpress/2014/01/install-xrdp-remote-desktop-to-centos-6-5/
+## http://www.itzgeek.com/how-tos/linux/centos-how-tos/install-xrdp-on-centos-7-rhel-7.html#axzz3ESHdx6kS
 
 install_xrdp(){
 	if [ -z $(yum repolist|grep -i epel) ]; then
@@ -384,15 +402,6 @@ install_xrdp(){
 	sudo service iptables restart;
 	sudo iptables -L;
 }
-
-# How To Enable EPEL Repository in RHEL/CentOS 7/6/5?
-# http://www.tecmint.com/how-to-enable-epel-repository-for-rhel-centos-6-5/
-
-## RHEL/CentOS 7 64-Bit ##
-# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
-# wget http://linux.mirrors.es.net/fedora-epel//7/x86_64/epel-release-7-0.2.noarch.rpm
-# wget http://mirror.metrocast.net/fedora/epel/beta/7/x86_64/epel-release-7-0.2.noarch.rpm
-# rpm -ivh epel-release-7-0.2.noarch.rpm
 
 
 # Evaluating command line argument
