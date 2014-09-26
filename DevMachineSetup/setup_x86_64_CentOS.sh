@@ -359,20 +359,21 @@ print_help(){
 
 adding_epel_repo(){
 	printf '\n\nChecking OS version...\n'
+	cd ~/Downloads/
+	pwd
 	if grep -q -i "release 6" /etc/redhat-release; then
 		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
-		cd ~/Downloads
 		## RHEL/CentOS 6.x 64-Bit ##
 		# wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
 		# rpm -ivh epel-release-6-8.noarch.rpm;
-		rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+		sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
 
 	elif grep -q -i "release 7" /etc/redhat-release; then
 		printf 'Adding EPEL Repository for CentOS 7.x x86_64:\n\n';
 		# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
-		# rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm;
-		rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
-		rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm;
+		# sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm;
+		sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
+		sudo rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm;
 	else
 		echo 'Unsupported OS version, skipping addition of EPEL Repository. Exiting...\n\n';
 		exit 1;
