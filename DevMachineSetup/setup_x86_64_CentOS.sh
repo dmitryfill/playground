@@ -111,7 +111,11 @@ chmod 755 ~/Desktop/idea14.desktop;
 
 # 3. Install latest Git (2.1.0 at this moment)
 install_git(){
-	## TODO Check if EPEL installed
+	if [ -z $(yum repolist|grep -i epel) ]; then
+		printf 'Installing EPEL Repository...'
+		adding_epel_repo;
+	fi
+
 	~/Downloads
 	pwd
 
@@ -119,7 +123,7 @@ install_git(){
 	# sudo yum install docbook2X
 
 	# Need to install following packages to be able to compile
-	sudo yum -y install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils asciidoc xmlto docbook2X
+	sudo yum -y install curl-devel expat-devel gettext-devel openssl-devel zlib-devel gcc perl-ExtUtils asciidoc xmlto docbook2X docbook2x-texi
 	# docbook2x-texi
 	# wget http://tcpdiag.dl.sourceforge.net/project/docbook2x/docbook2x/0.8.8/docbook2X-0.8.8.tar.gz
 	# tar -xzvf docbook2X-0.8.8.tar.gz
@@ -365,12 +369,20 @@ adding_epel_repo(){
 }
 
 install_tigervnc(){
-	## TODO - check if EPEL added!
-	sudo yum -y install xrdp tigervnc-server
-	sudo service vncserver start
-	sudo service xrdp start
-	sudo chkconfig xrdp on
-	sudo chkconfig vncserver on
+	if [ -z $(yum repolist|grep -i epel) ]; then
+		printf 'Installing EPEL Repository...'
+		adding_epel_repo;
+	fi
+	sudo yum -y install xrdp tigervnc-server;
+	sudo service vncserver start;
+	sudo service xrdp start;
+	sudo chkconfig xrdp on;
+	sudo chkconfig vncserver on;
+	## Allowing incoming TCP connection on 3389 port in firewall
+	sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 3389 -j ACCEPT;
+	sudo service iptables save;
+	sudo service iptables restart;
+	sudo iptables -L;
 }
 
 # How To Enable EPEL Repository in RHEL/CentOS 7/6/5?
