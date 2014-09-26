@@ -111,6 +111,7 @@ chmod 755 ~/Desktop/idea14.desktop;
 
 # 3. Install latest Git (2.1.0 at this moment)
 install_git(){
+	## TODO Check if EPEL installed
 	~/Downloads
 	pwd
 
@@ -361,6 +362,15 @@ adding_epel_repo(){
 	# clear
 	sudo yum -y update;
 	sudo yum -y upgrade;
+}
+
+install_tigervnc(){
+	## TODO - check if EPEL added!
+	sudo yum -y install xrdp tigervnc-server
+	sudo service vncserver start
+	sudo service xrdp start
+	sudo chkconfig xrdp on
+	sudo chkconfig vncserver on
 }
 
 # How To Enable EPEL Repository in RHEL/CentOS 7/6/5?
