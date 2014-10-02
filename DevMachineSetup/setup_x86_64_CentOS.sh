@@ -41,6 +41,7 @@ install_sublime(){
 	tar -xf sublime_text_3_build_3065_x64.tar.bz2
 
 	sudo mv -f ~/Downloads/sublime_text_3 /opt/
+	sudo ln -snf /opt/sublime_text_3 /opt/sublime_text
 
 	cp -f /opt/sublime_text_3/sublime_text.desktop ~/Desktop/
 	sed -i "s/Icon=sublime-text/Icon=\/opt\/sublime_text_3\/Icon\/256x256\/sublime-text.png/g" ~/Desktop/sublime_text.desktop
@@ -65,16 +66,19 @@ pwd;
 #wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
 # wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
 # wget http://download.jetbrains.com/idea/ideaIU-138.1696.2.tar.gz
-wget http://download.jetbrains.com/idea/ideaIU-138.2210.3.tar.gz;
+# wget http://download.jetbrains.com/idea/ideaIU-138.2210.3.tar.gz;
+wget http://download.jetbrains.com/idea/ideaIU-14-PublicPreview.tar.gz
+
 
 # tar -xzvf ideaIU-13.1.1.tar.gz
 # tar -xzvf ideaIU-135.815.tar.gz
 # tar -xzvf ideaIU-138.1696.2.tar.gz
-tar -xzvf ideaIU-138.2210.3.tar.gz;
+# tar -xzvf ideaIU-138.2210.3.tar.gz;
+tar -xzvf ideaIU-14-PublicPreview.tar.gz;
 # sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
 # sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
 # sudo mv -fv ~/Downloads/idea-IU-138.1696.2 /opt/
-sudo mv -fv ~/Downloads/idea-IU-138.2210.3 /opt/;
+sudo mv -fv ~/Downloads/idea-IU-138.2458.8 /opt/;
 
 
 # 2.1 Create a symlink
@@ -83,8 +87,10 @@ sudo mv -fv ~/Downloads/idea-IU-138.2210.3 /opt/;
 #sudo ln -snf /opt/idea-IU-138.1696.2/bin/idea.sh /usr/bin/idea
 #sudo ln -snf /opt/idea-IU-138.1696.2 /opt/idea14 
 
-sudo ln -snf /opt/idea-IU-138.2210.3/bin/idea.sh /usr/bin/idea;
-sudo ln -snf /opt/idea-IU-138.2210.3 /opt/idea14;
+# sudo ln -snf /opt/idea-IU-138.2210.3/bin/idea.sh /usr/bin/idea;
+# sudo ln -snf /opt/idea-IU-138.2210.3 /opt/idea14;
+sudo ln -snf /opt/idea-IU-138.2458.8/bin/idea.sh /usr/bin/idea;
+sudo ln -snf /opt/idea-IU-138.2458.8 /opt/idea14;
 
 
 rm -fv ~/Desktop/idea14.desktop;
