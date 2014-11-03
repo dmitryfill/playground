@@ -242,10 +242,12 @@ install_haproxy(){
 install_teamcity(){
 	# modified version of original instructions from here:
 	# http://latobcode.wordpress.com/2013/11/26/teamcity-8-on-centos-6-4-from-scratch/
-	wget http://download.jetbrains.com/teamcity/TeamCity-8.1.2.tar.gz
-	tar xzf TeamCity-8.1.2.tar.gz
+	yum install -y java
+	# wget http://download.jetbrains.com/teamcity/TeamCity-8.1.2.tar.gz
+	wget -O - http://download.jetbrains.com/teamcity/TeamCity-8.1.5.tar.gz | tar zxf -
+	# tar xzf TeamCity-8.1.2.tar.gz
 	# mv /opt/TeamCity /opt/TeamCity.bak2
-	sudo mv TeamCity /opt/
+	sudo mv -v TeamCity /opt/
 	sudo useradd -r teamcity
 	chown -R teamcity:teamcity /opt/TeamCity
 	# sudo touch /etc/init.d/teamcity
@@ -288,6 +290,52 @@ install_teamcity(){
 	sudo service teamcity check
 	sudo chkconfig teamcity on
 	sudo service teamcity start
+	sudo firewall-cmd --zone=public --add-port=8111/tcp
+}
+
+install_build(){
+	sudo yum install -y git docker docker-registry java;
+	sudo rpm -Uvh http://dl.bintray.com/jfrog/artifactory-rpms/artifactory-3.4.1.rpm
+	sudo firewall-cmd --zone=public --add-port=8081/tcp
+	sudo service artifactory start
+	sudo chkconfig artifactory on
+
+}
+
+install_mesos(){
+	# Adding EPEL
+	sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
+	# Prereqs
+	sudo yum groupinstall -y "Development Tools"
+	sudo yum install -y wget curl-devel python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel sqlite-devel db4-devel subversion-devel docker
+	sudo service docker start
+	sudo chkconfig docker on
+
+	# Build and  Install svn 1.8+
+	cd /opt/
+	wget -O - http://www.dsgnwrld.com/am/subversion/subversion-1.8.10.tar.gz | tar xzf -
+	cd subversion-1.8.10/
+	./configure
+	make
+	sudo make install
+	
+	# Install maven
+	wget -O - http://psg.mtu.edu/pub/apache/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz | tar zxf -
+	sudo ln -snf /opt/apache-maven-3.2.3/bin/mvn /usr/bin/mvn
+
+	# Install Mesos
+	wget -O - http://www.apache.org/dist/mesos/0.20.1/mesos-0.20.1.tar.gz | tar zxf -
+
+	cd /opt/mesos-0.20.1/
+	mkdir build
+	cd build/
+	../configure
+	make
+	make check
+	sudo make install 
+
+	sudo firewall-cmd --zone=public --add-port=5050/tcp
+
 }
 
 print_help(){
