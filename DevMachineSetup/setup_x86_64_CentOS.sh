@@ -67,18 +67,20 @@ pwd;
 # wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
 # wget http://download.jetbrains.com/idea/ideaIU-138.1696.2.tar.gz
 # wget http://download.jetbrains.com/idea/ideaIU-138.2210.3.tar.gz;
-wget http://download.jetbrains.com/idea/ideaIU-14-PublicPreview.tar.gz
-
+# wget http://download.jetbrains.com/idea/ideaIU-14-PublicPreview.tar.gz
+wget http://download.jetbrains.com/idea/ideaIU-139.223.8.tar.gz;
 
 # tar -xzvf ideaIU-13.1.1.tar.gz
 # tar -xzvf ideaIU-135.815.tar.gz
 # tar -xzvf ideaIU-138.1696.2.tar.gz
 # tar -xzvf ideaIU-138.2210.3.tar.gz;
-tar -xzvf ideaIU-14-PublicPreview.tar.gz;
+# tar -xzvf ideaIU-14-PublicPreview.tar.gz;
+tar -xzvf ideaIU-139.223.8.tar.gz;
 # sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
 # sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
 # sudo mv -fv ~/Downloads/idea-IU-138.1696.2 /opt/
-sudo mv -fv ~/Downloads/idea-IU-138.2458.8 /opt/;
+# sudo mv -fv ~/Downloads/idea-IU-138.2458.8 /opt/;
+sudo mv -fv ~/Downloads/idea-IU-139.223.8 /opt/;
 
 
 # 2.1 Create a symlink
@@ -89,8 +91,12 @@ sudo mv -fv ~/Downloads/idea-IU-138.2458.8 /opt/;
 
 # sudo ln -snf /opt/idea-IU-138.2210.3/bin/idea.sh /usr/bin/idea;
 # sudo ln -snf /opt/idea-IU-138.2210.3 /opt/idea14;
-sudo ln -snf /opt/idea-IU-138.2458.8/bin/idea.sh /usr/bin/idea;
-sudo ln -snf /opt/idea-IU-138.2458.8 /opt/idea14;
+
+# sudo ln -snf /opt/idea-IU-138.2458.8 /opt/idea14;
+sudo ln -snf /opt/idea-IU-139.223.8 /opt/idea14;
+
+# sudo ln -snf /opt/idea-IU-138.2458.8/bin/idea.sh /usr/bin/idea;
+sudo ln -snf /opt/idea14/bin/idea.sh /usr/bin/idea;
 
 
 rm -fv ~/Desktop/idea14.desktop;
@@ -189,7 +195,7 @@ install_git(){
 	git config --global alias.stat "status -v"
 	git config --global alias.wdiff "diff --color-words"
 
-	wget https://raw.githubusercontent.com/dmitryfill/Playground/master/.gitignore -o ~/.gitignore_global 
+	wget https://raw.githubusercontent.com/dmitryfill/Playground/master/.gitignore -O ~/.gitignore_global 
 	git config --global core.excludesfile ~/.gitignore_global
 
 	git config --global -l
@@ -224,14 +230,16 @@ install_gradle(){
 	pwd
 	# wget http://services.gradle.org/distributions/gradle-1.11-all.zip
 	# wget https://services.gradle.org/distributions/gradle-1.12-all.zip
-	wget https://services.gradle.org/distributions/gradle-2.0-all.zip
+	# wget https://services.gradle.org/distributions/gradle-2.0-all.zip
+	wget https://services.gradle.org/distributions/gradle-2.1-all.zip
 	# unzip gradle-1.11-all.zip
 	# unzip gradle-1.12-all.zip
-	unzip gradle-2.0-all.zip
+	# unzip gradle-2.0-all.zip
+	unzip gradle-2.1-all.zip
 	# sudo mv -fv gradle-1.12 /opt/
-	sudo mv -fv gradle-2.0 /opt/
+	sudo mv -fv gradle-2.1 /opt/
 	# sudo ln -snf /opt/gradle-1.12/bin/gradle /usr/bin/gradle
-	sudo ln -snf /opt/gradle-2.0/bin/gradle /usr/bin/gradle
+	sudo ln -snf /opt/gradle-2.1/bin/gradle /usr/bin/gradle
 }
 
 # 6. Install Oracle Java 7 & Java 8
@@ -239,14 +247,17 @@ install_java7(){
 	cd ~/Downloads
 	pwd
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.rpm"
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm";
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm";
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.rpm";
 	
-	sudo rpm -Uvh jdk-7u67-linux-x64.rpm;
+
+	# sudo rpm -Uvh jdk-7u67-linux-x64.rpm;
+	sudo rpm -Uvh jdk-7u71-linux-x64.rpm;
 
 	# echo -e '3\n' | sudo alternatives --config java;
 
 	### http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/
-	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_67/bin/java 200000;
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_71/bin/java 200000;
 	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.7.0_67/bin/javaws 200000; 
 	## Java Browser (Mozilla) Plugin 32-bit ##
 	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.7.0_67/jre/lib/i386/libnpjp2.so 200000; 
@@ -266,15 +277,18 @@ install_java8(){
 	cd ~/Downloads
 	pwd
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm";
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm";
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.rpm";
 	
 	# sudo rpm -Uvh jdk-8u5-linux-x64.rpm
-	sudo rpm -Uvh jdk-8u20-linux-x64.rpm;
+	# sudo rpm -Uvh jdk-8u20-linux-x64.rpm;
+	sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
 
 	# echo -e '3\n' | sudo alternatives --config java;
 	
 	### http://www.if-not-true-then-false.com/2014/install-oracle-java-8-on-fedora-centos-rhel/
-	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_20/bin/java 200000;
+	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_20/bin/java 200000;
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_25/bin/java 200000;
 	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.8.0_20/bin/javaws 200000; 
 	## Java Browser (Mozilla) Plugin 32-bit ##
 	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.8.0_20/jre/lib/i386/libnpjp2.so 200000; 
@@ -289,6 +303,10 @@ install_java8(){
 }
 
 alternatives_java_latest_install(){
+	
+	sudo alternatives --remove /usr/bin/java java /usr/java/latest/bin/java 200000;
+	sudo alternatives --install /usr/bin/java java /usr/java/latest/bin/java 200000;
+	
 	latestid=$(echo -e '\n'| sudo alternatives --config java |grep '/usr/java/latest/'| sed 's/^[+* \t]*//'|awk '{print $1}');
 	
 	# echo -e "$latestid\n";
@@ -323,15 +341,17 @@ alternatives_java_latest_install(){
 }
 
 install_maven(){
-	cd ~/Downloads
+	cd /Downloads/
 	pwd
 	# wget http://apache.osuosl.org/maven/maven-3/3.2.1/binaries/apache-maven-3.2.1-bin.tar.gz
-	wget http://apache.arvixe.com/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz
+	# wget http://apache.arvixe.com/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz
 	# tar -xzvf apache-maven-3.2.1-bin.tar.gz
-	tar -xzvf apache-maven-3.2.3-bin.tar.gz
+	# tar -xzvf apache-maven-3.2.3-bin.tar.gz
 	# sudo mv -v apache-maven-3.2.1 /opt/
-	sudo mv -v apache-maven-3.2.3 /opt/
+	# sudo mv -v apache-maven-3.2.3 /opt/
 	# sudo ln -snf /opt/apache-maven-3.2.1/bin/mvn /usr/bin/mvn
+	wget -O - http://psg.mtu.edu/pub/apache/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz | tar zxf -
+	sudo mv -v apache-maven-3.2.3 /opt/
 	sudo ln -snf /opt/apache-maven-3.2.3/bin/mvn /usr/bin/mvn
 
 	# http://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html
@@ -405,10 +425,12 @@ install_xrdp(){
 	sudo chkconfig xrdp on;
 	sudo chkconfig vncserver on;
 	## Allowing incoming TCP connection on 3389 port in firewall
-	sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 3389 -j ACCEPT;
-	sudo service iptables save;
-	sudo service iptables restart;
-	sudo iptables -L;
+	sudo firewall-cmd --permanent --add-port=3389/tcp
+	sudo firewall-cmd --reload
+	# sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 3389 -j ACCEPT;
+	# sudo service iptables save;
+	# sudo service iptables restart;
+	# sudo iptables -L;
 }
 
 

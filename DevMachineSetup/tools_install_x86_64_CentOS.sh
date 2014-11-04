@@ -326,6 +326,7 @@ install_build(){
 	sudo firewall-cmd --zone=public --add-port=8081/tcp
 	sudo service artifactory start
 	sudo chkconfig artifactory on
+	sudo systemctl disable firewalld.service
 
 	## Dynamic memory - http://technet.microsoft.com/en-us/library/dn531026.aspx
 	sudo echo 'SUBSYSTEM=="memory", ACTION=="add", ATTR{state}="online"' >/etc/udev/rules.d/100-balloon.rules
@@ -368,6 +369,44 @@ install_mesos(){
 	sudo make install 
 
 	sudo firewall-cmd --zone=public --add-port=5050/tcp
+
+	# nano /usr/lib/systemd/system/mesos-master.service
+ 
+sudo cat << EOF >> /usr/lib/systemd/system/mesos-master.service
+[Unit]
+Description=Mesos Master
+After=network.target
+
+[Service]
+Type=forking
+WorkingDirectory=/opt/mesos-0.20.1/build/
+
+ExecStart=/opt/mesos-0.20.1/build/bin/mesos-master.sh --ip=0.0.0.0 --work_dir=/var/lib/mesos --cluster=devel --zk=zk://127.0.0.1:2181/mesos --quorum=1
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+sudo cat << EOF >> /usr/lib/systemd/system/mesos-slave.service
+[Unit]
+Description=Mesos Master
+After=network.target
+
+[Service]
+Type=forking
+WorkingDirectory=/opt/mesos-0.20.1/build/
+
+ExecStart=/opt/mesos-0.20.1/build/bin/mesos-slave.sh --master=zk://127.0.0.1:2181/mesos
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
 
 }
 
