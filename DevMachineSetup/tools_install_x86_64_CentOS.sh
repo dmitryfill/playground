@@ -131,9 +131,12 @@ install_splunk(){
 	pwd
 	rm -Rf ~/Downloads/splunk
 	# wget -O splunk-6.0.2-196940-Linux-x86_64.tgz 'http://www.splunk.com/page/download_track?file=6.0.2/splunk/linux/splunk-6.0.2-196940-Linux-x86_64.tgz&ac=&wget=true&name=wget&platform=Linux&architecture=x86_64&version=6.0.2&product=splunk&typed=release'
-	wget -O splunk-6.1.0-206881-Linux-x86_64.tgz 'http://www.splunk.com/page/download_track?file=6.1.0/splunk/linux/splunk-6.1.0-206881-Linux-x86_64.tgz&ac=&wget=true&name=wget&platform=Linux&architecture=x86_64&version=6.1.0&product=splunk&typed=release'
+	# wget -O splunk-6.1.0-206881-Linux-x86_64.tgz 'http://www.splunk.com/page/download_track?file=6.1.0/splunk/linux/splunk-6.1.0-206881-Linux-x86_64.tgz&ac=&wget=true&name=wget&platform=Linux&architecture=x86_64&version=6.1.0&product=splunk&typed=release'
+	wget -O - 'http://www.splunk.com/page/download_track?file=6.2.0/splunk/linux/splunk-6.2.0-237341-Linux-x86_64.tgz&platform=Linux&architecture=x86_64&version=6.2.0&product=splunk&typed=release&name=linux_installer&d=pro' | tar zxf -
+
+	# rpm -ihv 'http://www.splunk.com/page/download_track?file=6.2.0/splunk/linux/splunk-6.2.0-237341-linux-2.6-x86_64.rpm&platform=Linux&architecture=x86_64&version=6.2.0&product=splunk&typed=release&name=linux_installer&d=pro'
 	#tar xvzf splunk-6.0.2-196940-Linux-x86_64.tgz
-	tar xzf splunk-6.1.0-206881-Linux-x86_64.tgz
+	# tar xzf splunk-6.1.0-206881-Linux-x86_64.tgz
 
 	sudo service splunk stop
 	sudo /opt/splunk/bin/splunk stop
@@ -162,6 +165,9 @@ install_splunk(){
 	cd ~/git
 	pwd
 	git clone https://github.com/splunk/splunk-sdk-java.git
+
+	## TBD Get Splunk Forwarder into the Docker
+	## http://www.splunk.com/download/universalforwarder
 }
 
 install_haproxy(){
@@ -248,9 +254,29 @@ install_teamcity(){
 	# tar xzf TeamCity-8.1.2.tar.gz
 	# mv /opt/TeamCity /opt/TeamCity.bak2
 	sudo mv -v TeamCity /opt/
-	sudo useradd -r teamcity
+	sudo useradd teamcity
 	chown -R teamcity:teamcity /opt/TeamCity
 	# sudo touch /etc/init.d/teamcity
+
+sudo cat << EOF >> /usr/lib/systemd/system/teamcity.service
+[Unit]
+Description=Team City Build Server
+After=network.target
+
+[Service]
+Type=forking
+User=teamcity
+Group=teamcity
+WorkingDirectory=/opt/TeamCity/bin/
+
+ExecStart=/opt/TeamCity/bin/runAll.sh start
+ExecStop=/opt/TeamCity/bin/runAll.sh stop
+
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
 
 	sudo cat << EOF >> /etc/init.d/teamcity
 	#!/bin/bash
@@ -286,6 +312,7 @@ install_teamcity(){
 	exit 0
 	EOF
 
+
 	sudo chmod 755 /etc/init.d/teamcity
 	sudo service teamcity check
 	sudo chkconfig teamcity on
@@ -299,6 +326,12 @@ install_build(){
 	sudo firewall-cmd --zone=public --add-port=8081/tcp
 	sudo service artifactory start
 	sudo chkconfig artifactory on
+
+	## Dynamic memory - http://technet.microsoft.com/en-us/library/dn531026.aspx
+	sudo echo 'SUBSYSTEM=="memory", ACTION=="add", ATTR{state}="online"' >/etc/udev/rules.d/100-balloon.rules
+	cat /etc/udev/rules.d/100-balloon.rules
+
+	sudo reboot
 
 }
 
