@@ -28,6 +28,9 @@ fi
 # https://www.digitalocean.com/community/articles/how-to-edit-the-sudoers-file-on-ubuntu-and-centos
 
 # read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
+sudo yum install -y 
+sudo yum groupinstall -y "Development Tools"
+sudo yum install -y wget net-tools curl-devel perl-devel perl-ExtUtils-Embed python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel sqlite-devel db4-devel subversion-devel docker nodejs npm
 
 # clear;
 
@@ -68,20 +71,28 @@ pwd;
 # wget http://download.jetbrains.com/idea/ideaIU-138.1696.2.tar.gz
 # wget http://download.jetbrains.com/idea/ideaIU-138.2210.3.tar.gz;
 # wget http://download.jetbrains.com/idea/ideaIU-14-PublicPreview.tar.gz
-wget http://download.jetbrains.com/idea/ideaIU-139.223.8.tar.gz;
+# wget http://download.jetbrains.com/idea/ideaIU-139.223.8.tar.gz;
+# wget -O - http://download.jetbrains.com/idea/ideaIU-139.463.4.tar.gz | tar zxf -;
+# wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.2.tar.gz | tar zxf -;
+# wget -O - http://download.jetbrains.com/idea/ideaIU-139.791.2.tar.gz | tar zxf -;
+wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.3.tar.gz | tar zxf -;
 
 # tar -xzvf ideaIU-13.1.1.tar.gz
 # tar -xzvf ideaIU-135.815.tar.gz
 # tar -xzvf ideaIU-138.1696.2.tar.gz
 # tar -xzvf ideaIU-138.2210.3.tar.gz;
 # tar -xzvf ideaIU-14-PublicPreview.tar.gz;
-tar -xzvf ideaIU-139.223.8.tar.gz;
+# tar -xzvf ideaIU-139.223.8.tar.gz;
+# tar -xzvf ideaIU-139.463.4.tar.gz
 # sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
 # sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
 # sudo mv -fv ~/Downloads/idea-IU-138.1696.2 /opt/
 # sudo mv -fv ~/Downloads/idea-IU-138.2458.8 /opt/;
-sudo mv -fv ~/Downloads/idea-IU-139.223.8 /opt/;
-
+# sudo mv -fv ~/Downloads/idea-IU-139.223.8 /opt/;
+# sudo mv -fv ~/Downloads/idea-IU-139.463.4 /opt/;
+# sudo mv -fv ~/Downloads/idea-IU-139.659.2 /opt/;
+# sudo mv -fv ~/Downloads/idea-IU-139.791.2 /opt/;
+sudo mv -fv ~/Downloads/idea-IU-139.1117.1 /opt/;
 
 # 2.1 Create a symlink
 #sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
@@ -93,11 +104,13 @@ sudo mv -fv ~/Downloads/idea-IU-139.223.8 /opt/;
 # sudo ln -snf /opt/idea-IU-138.2210.3 /opt/idea14;
 
 # sudo ln -snf /opt/idea-IU-138.2458.8 /opt/idea14;
-sudo ln -snf /opt/idea-IU-139.223.8 /opt/idea14;
+# sudo ln -snf /opt/idea-IU-139.223.8 /opt/idea14;
+# sudo ln -snf /opt/idea-IU-139.463.4 /opt/idea14;
+# sudo ln -snf /opt/idea-IU-139.659.2 /opt/idea14;
+sudo ln -snf /opt/idea-IU-139.1117.1 /opt/idea14;
 
 # sudo ln -snf /opt/idea-IU-138.2458.8/bin/idea.sh /usr/bin/idea;
 sudo ln -snf /opt/idea14/bin/idea.sh /usr/bin/idea;
-
 
 rm -fv ~/Desktop/idea14.desktop;
 # 2.2 Create a Desktop shortcut
@@ -112,12 +125,25 @@ Exec=/usr/bin/idea %F
 Terminal=false
 MimeType=text/plain;
 Icon=/opt/idea14/bin/idea.png
-Categories=TextEditor;Development;
+Categories=TextEditor;Development;IDE;
 StartupNotify=true
 Actions=Window;Document;
 EOF
 
 chmod 755 ~/Desktop/idea14.desktop;
+
+mkdir -p ~/.IntelliJIdea14/config/fileTemplates/includes
+## Includes:
+cat << EOF >> ~/.IntelliJIdea14/config/fileTemplates/includes/File\ Header.java
+/**
+ * Created by \${USER} on \${YEAR}-\${MONTH}-\${DAY}.
+ * Package: \${PACKAGE_NAME}
+ * Project: \${PROJECT_NAME}
+ * File: \${NAME}.java
+ * ...
+ * Copyright (c) ${YEAR} Company, Inc. All rights reserved.
+ */
+EOF
 
 }
 
@@ -180,10 +206,10 @@ install_git(){
 	git config --global alias.dc "diff --cached"
 	git config --global alias.df diff
 	git config --global alias.lg "log -p"
-	git config --global alias.ll = "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate --numstat"
+	git config --global alias.ll "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate --numstat"
 	git config --global alias.lol "log --graph --decorate --pretty=oneline --abbrev-commit"
 	git config --global alias.lola "log --graph --decorate --pretty=oneline --abbrev-commit --all"
-	git config --global alias.ls = "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate"
+	git config --global alias.ls "log --pretty=format:\"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]\" --decorate"
 	git config --global alias.lsf "ls-files"
 	git config --global alias.lsfe "ls-files -o -i --exclude-standard"
 	git config --global alias.lt "log --graph --oneline --decorate --all"
@@ -250,7 +276,6 @@ install_java7(){
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm";
 	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.rpm";
 	
-
 	# sudo rpm -Uvh jdk-7u67-linux-x64.rpm;
 	sudo rpm -Uvh jdk-7u71-linux-x64.rpm;
 
@@ -387,23 +412,25 @@ adding_epel_repo(){
 	printf '\n\nChecking OS version...\n'
 	cd ~/Downloads/
 	pwd
-	if grep -q -i "release 6" /etc/redhat-release; then
-		printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
-		## RHEL/CentOS 6.x 64-Bit ##
-		# wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
-		# rpm -ivh epel-release-6-8.noarch.rpm;
-		sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+	sudo yum install epel-release -y
 
-	elif grep -q -i "release 7" /etc/redhat-release; then
-		printf 'Adding EPEL Repository for CentOS 7.x x86_64:\n\n';
-		# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
-		# sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm;
-		sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
-		sudo rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm;
-	else
-		echo 'Unsupported OS version, skipping addition of EPEL Repository. Exiting...\n\n';
-		exit 1;
-	fi
+	# if grep -q -i "release 6" /etc/redhat-release; then
+	# 	printf 'Adding EPEL Repository for CentOS 6.x x86_64:\n\n';
+	# 	## RHEL/CentOS 6.x 64-Bit ##
+	# 	# wget http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+	# 	# rpm -ivh epel-release-6-8.noarch.rpm;
+	# 	sudo rpm -Uvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm;
+
+	# elif grep -q -i "release 7" /etc/redhat-release; then
+	# 	printf 'Adding EPEL Repository for CentOS 7.x x86_64:\n\n';
+	# 	# wget http://dl.fedoraproject.org/pub/epel/7/x86_64/epel-release-7-0.2.noarch.rpm
+	# 	# sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-1.noarch.rpm;
+	# 	sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
+	# 	sudo rpm -Uvh http://li.nux.ro/download/nux/dextop/el7/x86_64/nux-dextop-release-0-5.el7.nux.noarch.rpm;
+	# else
+	# 	echo 'Unsupported OS version, skipping addition of EPEL Repository. Exiting...\n\n';
+	# 	exit 1;
+	# fi
 
 	# clear
 	sudo yum -y update;
@@ -433,6 +460,22 @@ install_xrdp(){
 	# sudo iptables -L;
 }
 
+install_hadoop_tools(){
+	cd ~/Downloads/
+	pwd
+
+	# wget -O - http://psg.mtu.edu/pub/apache/hadoop/common/hadoop-2.5.1/hadoop-2.5.1.tar.gz | tar zxf -
+	# wget -O - http://psg.mtu.edu/pub/apache/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.4.tgz | tar zxf -
+	wget -O - http://www.apache.org/dist/hadoop/common/hadoop-2.5.1/hadoop-2.5.1.tar.gz | tar zxf -
+	wget -O - http://www.apache.org/dist/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.4.tgz | tar zxf -
+
+}
+
+install_misc_tools() {
+	sudo yum install -y kernel-devel qt4-devel 
+	sudo rpm -Uvh http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3-4.3.18_96516_el7-1.x86_64.rpm;
+	sudo rpm -Uvh https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5_x86_64.rpm;
+}
 
 # Evaluating command line argument
 # if [[ $1 =~ [-y] ]]; then

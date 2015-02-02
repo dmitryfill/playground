@@ -51,33 +51,55 @@ install_java6(){
 }
 
 install_java7(){
-	# JDK 7
 	cd ~/Downloads
 	pwd
-	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-linux-x64.tar.gz"
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u51-b13/jdk-7u51-linux-x64.tar.gz"
-	# tar xvzf jdk-7u45-linux-x64.tar.gz
-	tar xvzf jdk-7u51-linux-x64.tar.gz
-	# rm jdk-7u45-linux-x64.tar.gz
-	rm jdk-7u51-linux-x64.tar.gz
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.rpm";
+	
+	sudo rpm -Uvh jdk-7u71-linux-x64.rpm;
 
-	# if [ ! -d '/usr/lib/jvm' ]; then mkdir /usr/lib/jvm; fi && mv /tmp/jdk1.7.0_45 /usr/lib/jvm
-
-	# sudo update-alternatives --install /usr/bin/java java /usr/lib/jvm/jdk1.7.0_45/bin/java 1065
-	# sudo update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/jdk1.7.0_45/bin/javac 1065
-	# sudo update-alternatives --install /usr/bin/jar jar /usr/lib/jvm/jdk1.7.0_45/bin/jar 1065
-	# sudo update-alternatives --install /usr/bin/javaws javaws /usr/lib/jvm/jdk1.7.0_45/bin/javaws 1065
-	# sudo update-alternatives --install /usr/bin/javadoc javadoc /usr/lib/jvm/jdk1.7.0_45/bin/javadoc 1065
-	# sudo update-alternatives --config java
+	### http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_71/bin/java 200000;
+	# echo -e '3\n' | sudo alternatives --config java;
+	alternatives_java_latest_install;
 }
 
 install_java8(){
 	# JDK 8
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8-b132/jdk-8-linux-x64.tar.gz"
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.rpm";
+	
+	sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
+	
+	### http://www.if-not-true-then-false.com/2014/install-oracle-java-8-on-fedora-centos-rhel/
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_25/bin/java 200000;
+
+	alternatives_java_latest_install;
 }
 
+alternatives_java_latest_install(){
+	
+	sudo alternatives --remove /usr/bin/java java /usr/java/latest/bin/java 200000;
+	sudo alternatives --install /usr/bin/java java /usr/java/latest/bin/java 200000;
+	
+	latestid=$(echo -e '\n'| sudo alternatives --config java |grep '/usr/java/latest/'| sed 's/^[+* \t]*//'|awk '{print $1}');
+	
+	if [ -z $latestid ]; then 
+		printf 'Installing /usr/java/latest/...\n'; 
+		break;
+		### http://wiki.centos.org/HowTos/JavaRuntimeEnvironment
+		sudo alternatives --install /usr/bin/java java /usr/java/latest/bin/java 200000;
+	fi
+
+	latestid=$(echo -e '\n'| sudo alternatives --config java |grep '/usr/java/latest/'| sed 's/^[+* \t]*//'|awk '{print $1}');
+	
+	echo -e '\n\n'| sudo alternatives --config java;
+
+	printf 'Setting default java to latest... ($latestid)';
+	echo -e "$latestid\n\n"| sudo alternatives --config java; 
+	# maxid=$(echo -e '\n'| sudo alternatives --config java |grep 'There are '| awk '{print $3}');
+	printf '\n\n';
+}
 
 install_cdh5(){
 	clear
@@ -176,10 +198,10 @@ install_haproxy(){
 	clear
 	cd ~/Downloads
 	pwd 
-	sudo yum -y install wget openssl-devel pcre-devel make gcc
-	wget http://haproxy.1wt.eu/download/1.5/src/devel/haproxy-1.5-dev25.tar.gz
-	tar xzf haproxy-1.5-dev25.tar.gz
-	cd haproxy-1.5-dev25
+	sudo yum -y install wget openssl-devel pcre-devel make gcc curl-devel net-tools
+	# wget http://haproxy.1wt.eu/download/1.5/src/devel/haproxy-1.5-dev25.tar.gz
+	wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.8.tar.gz | tar zxf - 
+	cd haproxy-1.5.8
 	make TARGET=linux2628 CPU=x86_64 USE_OPENSSL=1 USE_ZLIB=1 USE_PCRE=1
 	sudo make PREFIX=/opt/haproxy-ssl install
 	sudo ln -snf /opt/haproxy-ssl/sbin/haproxy /usr/sbin/haproxy
@@ -217,13 +239,17 @@ install_haproxy(){
 	## Generate OpenSSL certs, original instructions here:
 	# https://gist.github.com/tomdz/5339163
 
-	export CA_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=ca@a-zona.com'
-	export SERVER_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=sysadmin@a-zona.com'
-	export CLIENT_SUBJECT='/C=US/ST=California/L=Los Angeles/CN=user@a-zona.com'
+	CA_SUBJECT='/C=US/ST=California/L=Los Angeles/O=A-Zona Inc/OU=IT/CN=*.a-zona.com'
+	SERVER_SUBJECT='/C=US/ST=California/L=Los Angeles/O=A-Zona Inc/OU=IT/CN=*.a-zona.com'
+	CLIENT_SUBJECT='/C=US/ST=California/L=Los Angeles/O=A-Zona Inc/OU=IT/CN=user@a-zona.com'
 
 	# certificate authority creation
 	openssl genrsa -out ca.key 4096
 	openssl req -new -x509 -days 365 -key ca.key -out ca.crt -subj "$CA_SUBJECT"
+
+	# server certificate in one line
+	# based on the wisard - https://www.digicert.com/easy-csr/openssl.htm
+	# openssl req -new -newkey rsa:4096 -nodes -out star_a-zona_com.csr -keyout star_a-zona_com.key -subj "/C=US/ST=California/L=Los Angeles/O=A-Zona Inc/OU=IT/CN=*.a-zona.com"
 
 	# server certificate creation
 	openssl genrsa -out server.key 1024
@@ -245,10 +271,84 @@ install_haproxy(){
 
 }
 
+install_haproxy_cos7(){
+	# based on instructions -http://www.certdepot.net/rhel7-configure-high-available-load-balancer/
+	sudo yum -y install haproxy net-tools wget curl-devel keepalived openssl-devel
+	
+	sudo systemctl enable haproxy
+	sudo systemctl enable keepalived
+
+	sudo cp -bv /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf.bak."$(date +%F.%H%m%S)"
+	sudo cp -bv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak."$(date +%F.%H%m%S)"
+
+	cd /opt/
+	wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.8.tar.gz | tar zxf - 
+	cd haproxy-1.5.8
+	make TARGET=linux2628 CPU=x86_64 USE_OPENSSL=1 USE_ZLIB=1 USE_PCRE=1
+	sudo make install
+	sudo cp -bv haproxy* /usr/sbin/
+
+	#sudo cp examples/examples.cfg /etc/haproxy/haproxy.cfg
+	sudo mkdir /var/lib/haproxy
+	sudo touch /var/lib/haproxy/stats
+	# sudo useradd -r haproxy
+	sudo mkdir /etc/haproxy/errors
+	cp -Rv examples/errorfiles/* /etc/haproxy/errors/
+
+sudo cat << EOF >> /etc/keepalived/keepalived.conf
+vrrp_script chk_haproxy {
+  script "killall -0 haproxy" # check the haproxy process
+  interval 2 # every 2 seconds
+  weight 2 # add 2 points if OK
+}
+
+vrrp_instance VI_1 {
+  interface eth0 # interface to monitor
+  state MASTER # MASTER on haproxy1, BACKUP on haproxy2
+  virtual_router_id 51
+  priority 101 # 101 on haproxy1, 100 on haproxy2
+  virtual_ipaddress {
+    10.0.0.15 # virtual ip address 
+  }
+  track_script {
+    chk_haproxy
+  }
+}
+EOF
+
+	# FirewallD could be disabled completely instead of adding all possible ports
+	sudo systemctl disable firewalld.service
+	sudo systemctl stop firewalld.service
+
+	sudo systemctl start keepalived
+	sudo systemctl start haproxy
+
+
+systemctl status haproxy
+haproxy.service - HAProxy Load Balancer
+   Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled)
+   Active: inactive (dead)
+
+[root@vm-cos7-hapxy01 ~]# cat /usr/lib/systemd/system/haproxy.service
+[Unit]
+Description=HAProxy Load Balancer
+After=syslog.target network.target
+
+[Service]
+ExecStart=/usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+
+}
+
 install_teamcity(){
 	# modified version of original instructions from here:
 	# http://latobcode.wordpress.com/2013/11/26/teamcity-8-on-centos-6-4-from-scratch/
-	yum install -y java
+	sudo yum install epel-release -y
+	sudo yum group install "Development Tools" -y
+	sudo yum install -y java net-tools python-devel php-devel nodejs-devel npm ruby-devel thrift-devel nodejs-devel npm 
 	# wget http://download.jetbrains.com/teamcity/TeamCity-8.1.2.tar.gz
 	wget -O - http://download.jetbrains.com/teamcity/TeamCity-8.1.5.tar.gz | tar zxf -
 	# tar xzf TeamCity-8.1.2.tar.gz
@@ -336,30 +436,54 @@ install_build(){
 
 }
 
-install_mesos(){
+install_cassandra(){
+	cd ~/Downloads
+	pwd
+
+	wget -O - http://www.apache.org/dist/cassandra/2.1.1/apache-cassandra-2.1.1-bin.tar.gz | tar zxf -
+}
+
+install_kafka() {
+	cd ~/Downloads
+	pwd
+
+	wget -O - http://www.apache.org/dist/kafka/0.8.2-beta/kafka_2.10-0.8.2-beta.tgz | tar zxf -
+}
+
+install_mesos_aurora(){
+	# Prereqs ...
 	# Adding EPEL
-	sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
-	# Prereqs
+	# sudo rpm -Uvh https://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-2.noarch.rpm;
+	sudo yum -y install epel-release
 	sudo yum groupinstall -y "Development Tools"
 	sudo yum install -y wget curl-devel perl-devel perl-ExtUtils-Embed python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel sqlite-devel db4-devel subversion-devel docker
-	sudo service docker start
-	sudo chkconfig docker on
+	sudo systemctl enable docker.service
+	sudo systemctl start docker.service
 
-	# Build and  Install svn 1.8+
+	# CentOS7 specific - it seems to need older verison of cyrus-sassl
+	# cd /usr/lib64/;ln -snf libsasl2.so.3.0.0 libsasl2.so.2;ls -lahGF /usr/lib64/ |grep libsasl;  
+
+	# Build and Install svn 1.8+
 	cd /opt/
+	pwd
 	wget -O - http://www.dsgnwrld.com/am/subversion/subversion-1.8.10.tar.gz | tar xzf -
 	cd subversion-1.8.10/
 	./configure
 	make
 	sudo make install
-	
+
+	cd /opt/
+	pwd	
 	# Install maven
 	wget -O - http://psg.mtu.edu/pub/apache/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.tar.gz | tar zxf -
 	sudo ln -snf /opt/apache-maven-3.2.3/bin/mvn /usr/bin/mvn
 
-	# Install Mesos
+	# Install Mesos & Aurora
 	wget -O - http://www.apache.org/dist/mesos/0.20.1/mesos-0.20.1.tar.gz | tar zxf -
-
+	# http://psg.mtu.edu/pub/apache/mesos/0.20.1/mesos-0.20.1.tar.gz
+	# wget -O - http://psg.mtu.edu/pub/apache/incubator/aurora/0.5.0/apache-aurora-0.5.0-incubating.tar.gz | tar zxf -
+	wget -O - http://www.apache.org/dist/incubator/aurora/0.5.0/apache-aurora-0.5.0-incubating.tar.gz | tar zxf -
+	
 	cd /opt/mesos-0.20.1/
 	mkdir build
 	cd build/
@@ -368,7 +492,13 @@ install_mesos(){
 	make check
 	sudo make install 
 
-	sudo firewall-cmd --zone=public --add-port=5050/tcp
+	sudo firewall-cmd --permanent --add-port=2181/tcp
+	sudo firewall-cmd --permanent --add-port=5050/tcp
+	sudo firewall-cmd --permanent --add-port=5051/tcp
+
+	# As an option firewall could be disabled completely
+	sudo systemctl disable firewalld.service
+	sudo systemctl stop firewalld.service
 
 	# nano /usr/lib/systemd/system/mesos-master.service
  
@@ -407,6 +537,58 @@ Restart=on-failure
 WantedBy=multi-user.target
 
 EOF
+
+}
+
+install_mesos_maraphon(){
+
+	## http://mesosphere.com/downloads/
+	sudo rpm -Uvh http://downloads.mesosphere.io/master/centos/7/mesos-0.20.1-1.0.centos701406.x86_64.rpm;
+	sudo systemctl enable mesos-master.service
+	sudo systemctl enable mesos-slave.service
+	sudo systemctl daemon-reload
+
+	# Set Cluster name, more consif options:
+	# http://mesosphere.com/docs/reference/mesos-master/
+	# http://mesosphere.com/docs/reference/mesos-slave/
+	echo 'dev0' > /etc/mesos-master/cluster
+	
+	# CentOS7 specific - it seems to need older verison of cyrus-sassl
+	# cd /usr/lib64/;ln -snf libsasl2.so.3.0.0 libsasl2.so.2;ls -lahGF /usr/lib64/ |grep libsasl;
+
+	# Point to Zookeeper
+	echo 'zk://127.0.0.1:2181,127.0.0.1:2181,127.0.0.1:2181/mesos' > /etc/mesos/zk
+
+	# Enable dockers support
+	# http://mesosphere.com/docs/tutorials/launch-docker-container-on-mesosphere/
+	sudo yum install -y wget curl-devel python-devel java-1.7.0-openjdk-devel zlib-devel docker net-tools cyrus-sasl-devel
+	sudo systemctl enable docker.service
+	sudo systemctl daemon-reload
+
+	sudo systemctl start docker.service
+
+	echo 'docker,mesos' > /etc/mesos-slave/containerizers
+	echo '5mins' > /etc/mesos-slave/executor_registration_timeout
+
+
+	sudo firewall-cmd --permanent --add-port=5050/tcp
+	sudo firewall-cmd --permanent --add-port=5051/tcp
+	sudo firewall-cmd --reload
+
+	sudo firewall-cmd --list-all
+
+	sudo systemctl start mesos-master.service
+	sudo systemctl start mesos-slave.service
+
+	sudo systemctl status mesos-slave
+	sudo systemctl status mesos-slave
+
+	# Test 
+	# mesos-execute --master="$(mesos-resolve `cat /etc/mesos/zk`)" --name="cluster-test" --command="printf date +%F_%H%M%s; sleep 55"
+
+	cd /opt/
+	pwd
+	wget -O - http://downloads.mesosphere.io/marathon/v0.7.0/marathon-0.7.0.tgz | tar zxf -;
 
 }
 
