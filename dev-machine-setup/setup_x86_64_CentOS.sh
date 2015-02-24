@@ -28,7 +28,6 @@ fi
 # https://www.digitalocean.com/community/articles/how-to-edit-the-sudoers-file-on-ubuntu-and-centos
 
 # read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
-sudo yum install -y 
 sudo yum groupinstall -y "Development Tools"
 sudo yum install -y wget net-tools curl-devel perl-devel perl-ExtUtils-Embed python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel sqlite-devel db4-devel subversion-devel docker nodejs npm
 
