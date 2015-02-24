@@ -75,7 +75,9 @@ pwd;
 # wget -O - http://download.jetbrains.com/idea/ideaIU-139.463.4.tar.gz | tar zxf -;
 # wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.2.tar.gz | tar zxf -;
 # wget -O - http://download.jetbrains.com/idea/ideaIU-139.791.2.tar.gz | tar zxf -;
-wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.3.tar.gz | tar zxf -;
+# wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.3.tar.gz | tar zxf -;
+wget -O - http://download.jetbrains.com/idea/ideaIU-140.2493.5.tar.gz | tar zxf -;
+
 
 # tar -xzvf ideaIU-13.1.1.tar.gz
 # tar -xzvf ideaIU-135.815.tar.gz
@@ -92,7 +94,8 @@ wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.3.tar.gz | tar zxf -;
 # sudo mv -fv ~/Downloads/idea-IU-139.463.4 /opt/;
 # sudo mv -fv ~/Downloads/idea-IU-139.659.2 /opt/;
 # sudo mv -fv ~/Downloads/idea-IU-139.791.2 /opt/;
-sudo mv -fv ~/Downloads/idea-IU-139.1117.1 /opt/;
+# sudo mv -fv ~/Downloads/idea-IU-139.1117.1 /opt/;
+sudo mv -fv ~/Downloads/idea-IU-140.2493.5 /opt/;
 
 # 2.1 Create a symlink
 #sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
@@ -107,7 +110,8 @@ sudo mv -fv ~/Downloads/idea-IU-139.1117.1 /opt/;
 # sudo ln -snf /opt/idea-IU-139.223.8 /opt/idea14;
 # sudo ln -snf /opt/idea-IU-139.463.4 /opt/idea14;
 # sudo ln -snf /opt/idea-IU-139.659.2 /opt/idea14;
-sudo ln -snf /opt/idea-IU-139.1117.1 /opt/idea14;
+# sudo ln -snf /opt/idea-IU-139.1117.1 /opt/idea14;
+sudo ln -snf /opt/idea-IU-140.2493.5 /opt/idea14;
 
 # sudo ln -snf /opt/idea-IU-138.2458.8/bin/idea.sh /usr/bin/idea;
 sudo ln -snf /opt/idea14/bin/idea.sh /usr/bin/idea;
@@ -274,15 +278,18 @@ install_java7(){
 	pwd
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u55-b13/jdk-7u55-linux-x64.rpm"
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-linux-x64.rpm";
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.rpm";
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.rpm";
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.rpm";
 	
 	# sudo rpm -Uvh jdk-7u67-linux-x64.rpm;
-	sudo rpm -Uvh jdk-7u71-linux-x64.rpm;
+	# sudo rpm -Uvh jdk-7u71-linux-x64.rpm;
+	sudo rpm -Uvh jdk-7u75-linux-x64.rpm;
 
 	# echo -e '3\n' | sudo alternatives --config java;
 
 	### http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/
-	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_71/bin/java 200000;
+	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_71/bin/java 200000;
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_75/bin/java 200000;
 	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.7.0_67/bin/javaws 200000; 
 	## Java Browser (Mozilla) Plugin 32-bit ##
 	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.7.0_67/jre/lib/i386/libnpjp2.so 200000; 
@@ -303,17 +310,20 @@ install_java8(){
 	pwd
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm";
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.rpm";
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.rpm";
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u31-b13/jdk-8u31-linux-x64.rpm";
 	
 	# sudo rpm -Uvh jdk-8u5-linux-x64.rpm
 	# sudo rpm -Uvh jdk-8u20-linux-x64.rpm;
-	sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
+	# sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
+	sudo rpm -Uvh jdk-8u31-linux-x64.rpm;
 
 	# echo -e '3\n' | sudo alternatives --config java;
 	
 	### http://www.if-not-true-then-false.com/2014/install-oracle-java-8-on-fedora-centos-rhel/
 	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_20/bin/java 200000;
-	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_25/bin/java 200000;
+	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_25/bin/java 200000;
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_31/bin/java 200000;
 	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.8.0_20/bin/javaws 200000; 
 	## Java Browser (Mozilla) Plugin 32-bit ##
 	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.8.0_20/jre/lib/i386/libnpjp2.so 200000; 
@@ -466,8 +476,10 @@ install_hadoop_tools(){
 
 	# wget -O - http://psg.mtu.edu/pub/apache/hadoop/common/hadoop-2.5.1/hadoop-2.5.1.tar.gz | tar zxf -
 	# wget -O - http://psg.mtu.edu/pub/apache/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.4.tgz | tar zxf -
-	wget -O - http://www.apache.org/dist/hadoop/common/hadoop-2.5.1/hadoop-2.5.1.tar.gz | tar zxf -
-	wget -O - http://www.apache.org/dist/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.4.tgz | tar zxf -
+	# wget -O - http://www.apache.org/dist/hadoop/common/hadoop-2.5.1/hadoop-2.5.1.tar.gz | tar zxf -
+	wget -O - http://www.apache.org/dist/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz | tar zxf -
+	# wget -O - http://www.apache.org/dist/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.4.tgz | tar zxf -
+	wget -O - http://www.apache.org/dist/spark/spark-1.2.0/spark-1.2.0-bin-hadoop2.4.tgz | tar zxf -
 
 }
 

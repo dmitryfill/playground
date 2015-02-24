@@ -53,13 +53,13 @@ install_java6(){
 install_java7(){
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u71-b14/jdk-7u71-linux-x64.rpm";
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/7u75-b13/jdk-7u75-linux-x64.rpm";
 	
-	sudo rpm -Uvh jdk-7u71-linux-x64.rpm;
+	sudo rpm -Uvh jdk-7u75-linux-x64.rpm;
 
 	### http://www.if-not-true-then-false.com/2010/install-sun-oracle-java-jdk-jre-7-on-fedora-centos-red-hat-rhel/
-	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_71/bin/java 200000;
-	# echo -e '3\n' | sudo alternatives --config java;
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.7.0_75/bin/java 200000;
+
 	alternatives_java_latest_install;
 }
 
@@ -67,12 +67,11 @@ install_java8(){
 	# JDK 8
 	cd ~/Downloads
 	pwd
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.rpm";
-	
-	sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
-	
-	### http://www.if-not-true-then-false.com/2014/install-oracle-java-8-on-fedora-centos-rhel/
-	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_25/bin/java 200000;
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u31-b13/jdk-8u31-linux-x64.rpm";
+
+	sudo rpm -Uvh jdk-8u31-linux-x64.rpm;
+
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_31/bin/java 200000;
 
 	alternatives_java_latest_install;
 }
@@ -437,10 +436,91 @@ install_build(){
 }
 
 install_cassandra(){
-	cd ~/Downloads
+	# http://planetcassandra.org/blog/installing-the-cassandra-spark-oss-stack/
+	cd ~/opt/
 	pwd
+	sudo yum install epel-release -y
+	# sudo yum group install "Development Tools" -y
+	sudo yum install -y wget nano java net-tools python-devel thrift-devel jna
 
-	wget -O - http://www.apache.org/dist/cassandra/2.1.1/apache-cassandra-2.1.1-bin.tar.gz | tar zxf -
+	install_java7
+
+	# wget -O - http://www.apache.org/dist/cassandra/2.1.1/apache-cassandra-2.1.1-bin.tar.gz | tar zxf -
+	wget -O - http://www.apache.org/dist/cassandra/2.1.2/apache-cassandra-2.1.2-bin.tar.gz | tar zxf -
+
+	sudo ln -snf /opt/apache-cassandra-2.1.2/ /opt/cassandra
+
+	sudo mkdir -p /srv/cassandra/{log,data,commitlogs,saved_caches}
+	(grep -q '^cassandra:' /etc/passwd) || useradd -c "Apache Cassandra" -s /bin/bash -d /srv/cassandra cassandra
+	sudo chown -R cassandra:cassandra /srv/cassandra
+
+ip=$(ip addr show eth0 |perl -ne 'if ($_ =~ /inet (\d+\.\d+\.\d+\.\d+)/) { print $1 }') 
+perl -i.bak -pe "
+  s/^(cluster_name:).*/\$1 'css.cave.a-zona.com'/;
+  s/^(listen|rpc)_address:.*/\${1}_address: $ip/;
+  s|/var/lib|/srv|;
+  s/(\s+-\s+seeds:).*/\$1 '10.0.0.40,10.0.0.41'/
+" /opt/cassandra/conf/cassandra.yaml
+# EOF
+
+cat /opt/cassandra/conf/cassandra.yaml |grep -i 'cluster_name\|seed\|listen_\|snitch\|port:\|srv\|saved_caches'
+
+cat > /opt/cassandra/conf/log4j-server.properties <<EOF
+log4j.rootLogger=INFO,R
+log4j.appender.R=org.apache.log4j.RollingFileAppender
+log4j.appender.R.maxFileSize=20MB
+log4j.appender.R.maxBackupIndex=20
+log4j.appender.R.layout=org.apache.log4j.PatternLayout
+log4j.appender.R.layout.ConversionPattern=%5p [%t] %d{ISO8601} %F (line %L) %m%n
+log4j.appender.R.File=/srv/cassandra/log/system.log
+log4j.logger.org.apache.thrift.server.TNonblockingServer=ERROR
+EOF
+
+# sudo cat << EOF >> /usr/lib/systemd/system/cassandra.service
+sudo cat > /usr/lib/systemd/system/cassandra.service <<EOF
+[Unit]
+Description=Cassandra Tarball
+After=network.target
+ 
+[Service]
+User=cassandra
+Group=cassandra
+RuntimeDirectory=cassandra
+PIDFile=/run/cassandra/cassandra.pid
+ExecStart=/opt/cassandra/bin/cassandra -f -p /run/cassandra/cassandra.pid
+StandardOutput=journal
+StandardError=journal
+OOMScoreAdjust=-500
+LimitNOFILE=infinity
+LimitMEMLOCK=infinity
+LimitNPROC=infinity
+LimitAS=infinity
+Environment=MAX_HEAP_SIZE=8G HEAP_NEWSIZE=1G CASSANDRA_HEAPDUMP_DIR=/srv/cassandra/log
+CPUAccounting=true
+CPUShares=1000
+ 
+[Install]
+WantedBy=multi-user.target
+EOF
+
+	sudo systemctl enable cassandra
+	sudo systemctl start cassandra
+	sudo systemctl status cassandra
+
+	sudo firewall-cmd --permanent --add-port=9042/tcp
+	sudo firewall-cmd --permanent --add-port=9160/tcp
+	sudo firewall-cmd --permanent --add-port=7000/tcp
+	sudo firewall-cmd --permanent --add-port=7001/tcp
+	sudo firewall-cmd --permanent --add-port=7199/tcp
+
+	sudo firewall-cmd --reload
+
+	sudo firewall-cmd --list-all
+
+	# As an option firewall could be disabled completely
+	sudo systemctl disable firewalld.service
+	sudo systemctl stop firewalld.service
+
 }
 
 install_kafka() {
