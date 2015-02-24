@@ -512,6 +512,7 @@ EOF
 	sudo firewall-cmd --permanent --add-port=7000/tcp
 	sudo firewall-cmd --permanent --add-port=7001/tcp
 	sudo firewall-cmd --permanent --add-port=7199/tcp
+	sudo firewall-cmd --permanent --add-port=7190/tcp
 
 	sudo firewall-cmd --reload
 
