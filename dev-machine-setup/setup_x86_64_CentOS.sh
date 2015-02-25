@@ -75,8 +75,8 @@ pwd;
 # wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.2.tar.gz | tar zxf -;
 # wget -O - http://download.jetbrains.com/idea/ideaIU-139.791.2.tar.gz | tar zxf -;
 # wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.3.tar.gz | tar zxf -;
-wget -O - http://download.jetbrains.com/idea/ideaIU-140.2493.5.tar.gz | tar zxf -;
-
+# wget -O - http://download.jetbrains.com/idea/ideaIU-140.2493.5.tar.gz | tar zxf -;
+wget -O - http://download.jetbrains.com/idea/ideaIU-140.2683.2.tar.gz | tar zxf -;
 
 # tar -xzvf ideaIU-13.1.1.tar.gz
 # tar -xzvf ideaIU-135.815.tar.gz
@@ -94,7 +94,8 @@ wget -O - http://download.jetbrains.com/idea/ideaIU-140.2493.5.tar.gz | tar zxf 
 # sudo mv -fv ~/Downloads/idea-IU-139.659.2 /opt/;
 # sudo mv -fv ~/Downloads/idea-IU-139.791.2 /opt/;
 # sudo mv -fv ~/Downloads/idea-IU-139.1117.1 /opt/;
-sudo mv -fv ~/Downloads/idea-IU-140.2493.5 /opt/;
+# sudo mv -fv ~/Downloads/idea-IU-140.2493.5 /opt/;
+sudo mv -fv ~/Downloads/idea-IU-140.2683.2 /opt/;
 
 # 2.1 Create a symlink
 #sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
@@ -110,7 +111,8 @@ sudo mv -fv ~/Downloads/idea-IU-140.2493.5 /opt/;
 # sudo ln -snf /opt/idea-IU-139.463.4 /opt/idea14;
 # sudo ln -snf /opt/idea-IU-139.659.2 /opt/idea14;
 # sudo ln -snf /opt/idea-IU-139.1117.1 /opt/idea14;
-sudo ln -snf /opt/idea-IU-140.2493.5 /opt/idea14;
+# sudo ln -snf /opt/idea-IU-140.2493.5 /opt/idea14;
+sudo ln -snf /opt/idea-IU-140.2683.2 /opt/idea14;
 
 # sudo ln -snf /opt/idea-IU-138.2458.8/bin/idea.sh /usr/bin/idea;
 sudo ln -snf /opt/idea14/bin/idea.sh /usr/bin/idea;
@@ -148,6 +150,7 @@ cat << EOF >> ~/.IntelliJIdea14/config/fileTemplates/includes/File\ Header.java
  */
 EOF
 
+sudo cp -v ~/Desktop/idea14.desktop /usr/share/applications/
 }
 
 # 3. Install latest Git (2.1.0 at this moment)
