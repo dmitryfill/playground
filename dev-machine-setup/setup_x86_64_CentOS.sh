@@ -146,7 +146,7 @@ cat << EOF >> ~/.IntelliJIdea14/config/fileTemplates/includes/File\ Header.java
  * Project: \${PROJECT_NAME}
  * File: \${NAME}.java
  * ...
- * Copyright (c) ${YEAR} Company, Inc. All rights reserved.
+ * Copyright (c) \${YEAR} Company, Inc. All rights reserved.
  */
 EOF
 
