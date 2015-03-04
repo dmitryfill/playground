@@ -466,7 +466,7 @@ perl -i.bak -pe "
 cat /opt/cassandra/conf/cassandra.yaml |grep -i 'cluster_name\|seed\|listen_\|snitch\|port:\|srv\|saved_caches'
 
 cat > /opt/cassandra/conf/log4j-server.properties <<EOF
-log4j.rootLogger=INFO,R
+log4j.rootLogger=WARN,R
 log4j.appender.R=org.apache.log4j.RollingFileAppender
 log4j.appender.R.maxFileSize=20MB
 log4j.appender.R.maxBackupIndex=20
@@ -506,6 +506,65 @@ EOF
 	sudo systemctl enable cassandra
 	sudo systemctl start cassandra
 	sudo systemctl status cassandra
+
+	sudo firewall-cmd --permanent --add-port=9042/tcp
+	sudo firewall-cmd --permanent --add-port=9160/tcp
+	sudo firewall-cmd --permanent --add-port=7000/tcp
+	sudo firewall-cmd --permanent --add-port=7001/tcp
+	sudo firewall-cmd --permanent --add-port=7199/tcp
+	sudo firewall-cmd --permanent --add-port=7190/tcp
+
+	sudo firewall-cmd --reload
+
+	sudo firewall-cmd --list-all
+
+	# As an option firewall could be disabled completely
+	sudo systemctl disable firewalld.service
+	sudo systemctl stop firewalld.service
+}
+
+install_cassandra_datastax(){
+cat > /etc/yum.repos.d/datastax.repo <<EOF
+[datastax] 
+name = DataStax Repo for Apache Cassandra
+baseurl = http://rpm.datastax.com/community
+enabled = 1
+gpgcheck = 0
+EOF
+
+	sudo yum update -y
+	sudo yum install -y dsc21
+	sudo yum install -y cassandra21-tools
+	sudo yum install -y datastax-agent
+
+	cat /etc/cassandra/conf/cassandra.yaml |grep -i 'cluster_name\|seed\|listen_\|snitch\|port:\|srv\|saved_caches'|grep -i '^[^#\;]'
+
+ip=$(ip addr show eth0 |perl -ne 'if ($_ =~ /inet (\d+\.\d+\.\d+\.\d+)/) { print $1 }') 
+perl -i.bak -pe "
+  s/^(cluster_name:).*/\$1 'css.cave.a-zona.com'/;
+  s/^(listen|rpc)_address:.*/\${1}_address: $ip/;
+  s/(\s+-\s+seeds:).*/\$1 '10.0.0.40,10.0.0.41,10.0.0.42,10.0.0.43'/;
+  s/^(endpoint_snitch:).*/\$1 GossipingPropertyFileSnitch/
+" /etc/cassandra/conf/cassandra.yaml
+
+perl -i.bak -pe "
+  s/^(dc=)*/\$1dc1-hv01/;
+  s/^(rack=)*/\$1rack1/
+" /etc/cassandra/conf/cassandra-rackdc.properties
+
+
+	echo "stomp_interface: 10.0.0.50" | sudo tee -a /var/lib/datastax-agent/conf/address.yaml
+	# If SSL communication is enabled in opscenterd.conf, use SSL in address.yaml.
+	# echo "use_ssl: 1" | sudo tee -a /var/lib/datastax-agent/conf/address.yaml
+
+	sudo systemctl enable cassandra
+	sudo systemctl start cassandra
+	sudo systemctl status cassandra
+
+	sudo systemctl enable datastax-agent
+	sudo systemctl start datastax-agent
+	sudo systemctl status datastax-agent
+	# sudo service datastax-agent start
 
 	sudo firewall-cmd --permanent --add-port=9042/tcp
 	sudo firewall-cmd --permanent --add-port=9160/tcp
