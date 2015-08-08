@@ -198,9 +198,15 @@ install_haproxy(){
 	cd ~/Downloads
 	pwd 
 	sudo yum -y install wget openssl-devel pcre-devel make gcc curl-devel net-tools
+	sudo yum remove haproxy 
 	# wget http://haproxy.1wt.eu/download/1.5/src/devel/haproxy-1.5-dev25.tar.gz
-	wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.8.tar.gz | tar zxf - 
-	cd haproxy-1.5.8
+	# wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.8.tar.gz | tar zxf -
+	# wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.11.tar.gz | tar zxf -
+	wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.14.tar.gz | tar zxf -
+
+	# cd haproxy-1.5.8
+	# cd haproxy-1.5.11
+	cd haproxy-1.5.14
 	make TARGET=linux2628 CPU=x86_64 USE_OPENSSL=1 USE_ZLIB=1 USE_PCRE=1
 	sudo make PREFIX=/opt/haproxy-ssl install
 	sudo ln -snf /opt/haproxy-ssl/sbin/haproxy /usr/sbin/haproxy
@@ -215,6 +221,7 @@ install_haproxy(){
 	cp -Rv examples/errorfiles/* /etc/haproxy/errors/
 
 	## http://www.virtualtothecore.com/en/balance-multiple-view-connection-servers-using-haproxy/
+	# /usr/lib/systemd/system/haproxy.service
 
 	# sudo yum -y install keepalived
 	# Before you can load the virtual IP and test it, there are some other configuration changes to be made. First, add this line at the end of the /etc/sysctl.conf file:
@@ -271,8 +278,9 @@ install_haproxy(){
 }
 
 install_haproxy_cos7(){
-	# based on instructions -http://www.certdepot.net/rhel7-configure-high-available-load-balancer/
-	sudo yum -y install haproxy net-tools wget curl-devel keepalived openssl-devel
+	# based on instructions - http://www.certdepot.net/rhel7-configure-high-available-load-balancer/
+	sudo yum -y remove haproxy 
+	sudo yum -y install net-tools wget curl-devel keepalived openssl-devel
 	
 	sudo systemctl enable haproxy
 	sudo systemctl enable keepalived
@@ -281,8 +289,13 @@ install_haproxy_cos7(){
 	sudo cp -bv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak."$(date +%F.%H%m%S)"
 
 	cd /opt/
-	wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.8.tar.gz | tar zxf - 
-	cd haproxy-1.5.8
+	# wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.8.tar.gz | tar zxf -
+	# wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.11.tar.gz | tar zxf -
+	wget -O - http://www.haproxy.org/download/1.5/src/haproxy-1.5.14.tar.gz | tar zxf -
+
+	# cd haproxy-1.5.8
+	# cd haproxy-1.5.11
+	cd haproxy-1.5.14
 	make TARGET=linux2628 CPU=x86_64 USE_OPENSSL=1 USE_ZLIB=1 USE_PCRE=1
 	sudo make install
 	sudo cp -bv haproxy* /usr/sbin/
@@ -293,6 +306,21 @@ install_haproxy_cos7(){
 	# sudo useradd -r haproxy
 	sudo mkdir /etc/haproxy/errors
 	cp -Rv examples/errorfiles/* /etc/haproxy/errors/
+
+sudo cat << EOF >> /usr/lib/systemd/system/haproxy.service
+[Unit]
+Description=HAProxy Load Balancer
+After=syslog.target network.target
+
+[Service]
+User=haproxy
+Group=haproxy
+ExecStart=/usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+ExecReload=/bin/kill -USR2 $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+EOF
 
 sudo cat << EOF >> /etc/keepalived/keepalived.conf
 vrrp_script chk_haproxy {
@@ -319,26 +347,30 @@ EOF
 	sudo systemctl disable firewalld.service
 	sudo systemctl stop firewalld.service
 
+	sudo systemctl enable haproxy
+	sudo systemctl enable keepalived
+
 	sudo systemctl start keepalived
 	sudo systemctl start haproxy
+	
+# systemctl status haproxy
+# haproxy.service - HAProxy Load Balancer
+#    Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled)
+#    Active: inactive (dead)
 
+# [root@vm-cos7-hapxy01 ~]# cat /usr/lib/systemd/system/haproxy.service
+# [Unit]
+# Description=HAProxy Load Balancer
+# After=syslog.target network.target
 
-systemctl status haproxy
-haproxy.service - HAProxy Load Balancer
-   Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled)
-   Active: inactive (dead)
+# [Service]
+# User=haproxy
+# Group=haproxy
+# ExecStart=/usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
+# ExecReload=/bin/kill -USR2 $MAINPID
 
-[root@vm-cos7-hapxy01 ~]# cat /usr/lib/systemd/system/haproxy.service
-[Unit]
-Description=HAProxy Load Balancer
-After=syslog.target network.target
-
-[Service]
-ExecStart=/usr/sbin/haproxy-systemd-wrapper -f /etc/haproxy/haproxy.cfg -p /run/haproxy.pid
-ExecReload=/bin/kill -USR2 $MAINPID
-
-[Install]
-WantedBy=multi-user.target
+# [Install]
+# WantedBy=multi-user.target
 
 }
 

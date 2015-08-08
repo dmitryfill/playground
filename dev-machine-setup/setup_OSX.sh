@@ -98,3 +98,16 @@ img2iso(){
 	## http://forums.appleinsider.com/t/159955/howto-create-bootable-mavericks-iso
 	
 }
+
+build_centos_bootable_usb() {
+	# http://www.myiphoneadventure.com/os-x/create-a-bootable-centos-usb-drive-with-a-mac-os-x
+	hdiutil convert -format UDRW -o target.img CentOS-7.0-1406-x86_64-Everything.iso;
+	diskutil list;
+	# Assuming the USB identified as /dev/disk2, unmount it
+	diskutil unmountDisk /dev/disk2;
+	sudo dd if=target.img.dmg of=/dev/disk2 bs=1m;
+}
+
+
+
+

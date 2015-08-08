@@ -29,7 +29,7 @@ fi
 
 # read -t30 -n1 -r -p "Press any key in the next 30 seconds..." key
 sudo yum groupinstall -y "Development Tools"
-sudo yum install -y wget net-tools curl-devel perl-devel perl-ExtUtils-Embed python-devel java-1.7.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel sqlite-devel db4-devel subversion-devel docker nodejs npm
+sudo yum install -y wget net-tools curl-devel perl-devel perl-ExtUtils-Embed python-devel java-1.7.0-openjdk-devel java-1.8.0-openjdk-devel zlib-devel libcurl-devel openssl-devel cyrus-sasl-devel cyrus-sasl-md5 apr-devel sqlite-devel db4-devel subversion-devel docker nodejs npm
 
 # clear;
 
@@ -39,8 +39,10 @@ install_sublime(){
 	pwd
 	# wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3059_x64.tar.bz2
 	# tar -xf sublime_text_3_build_3059_x64.tar.bz2
-	wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3065_x64.tar.bz2
-	tar -xf sublime_text_3_build_3065_x64.tar.bz2
+	# wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3065_x64.tar.bz2
+	wget http://c758482.r82.cf2.rackcdn.com/sublime_text_3_build_3083_x64.tar.bz2
+	# tar -xf sublime_text_3_build_3065_x64.tar.bz2
+	tar -xfv sublime_text_3_build_3083_x64.tar.bz2
 
 	sudo mv -f ~/Downloads/sublime_text_3 /opt/
 	sudo ln -snf /opt/sublime_text_3 /opt/sublime_text
@@ -64,61 +66,33 @@ install_idea(){
 
 cd ~/Downloads;
 pwd;
-#wget http://download.jetbrains.com/idea/ideaIU-13.0.2.tar.gz
-#wget http://download.jetbrains.com/idea/ideaIU-13.1.1.tar.gz
-# wget http://download.jetbrains.com/idea/ideaIU-135.815.tar.gz
-# wget http://download.jetbrains.com/idea/ideaIU-138.1696.2.tar.gz
-# wget http://download.jetbrains.com/idea/ideaIU-138.2210.3.tar.gz;
-# wget http://download.jetbrains.com/idea/ideaIU-14-PublicPreview.tar.gz
-# wget http://download.jetbrains.com/idea/ideaIU-139.223.8.tar.gz;
-# wget -O - http://download.jetbrains.com/idea/ideaIU-139.463.4.tar.gz | tar zxf -;
-# wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.2.tar.gz | tar zxf -;
-# wget -O - http://download.jetbrains.com/idea/ideaIU-139.791.2.tar.gz | tar zxf -;
-# wget -O - http://download.jetbrains.com/idea/ideaIU-14.0.3.tar.gz | tar zxf -;
+# idea14
 # wget -O - http://download.jetbrains.com/idea/ideaIU-140.2493.5.tar.gz | tar zxf -;
-wget -O - http://download.jetbrains.com/idea/ideaIU-140.2683.2.tar.gz | tar zxf -;
+# wget -O - http://download.jetbrains.com/idea/ideaIU-140.2683.2.tar.gz | tar zxf -;
+wget -O - http://download.jetbrains.com/idea/ideaIU-141.2311.1.tar.gz | tar zxf -;
 
-# tar -xzvf ideaIU-13.1.1.tar.gz
-# tar -xzvf ideaIU-135.815.tar.gz
-# tar -xzvf ideaIU-138.1696.2.tar.gz
-# tar -xzvf ideaIU-138.2210.3.tar.gz;
-# tar -xzvf ideaIU-14-PublicPreview.tar.gz;
-# tar -xzvf ideaIU-139.223.8.tar.gz;
-# tar -xzvf ideaIU-139.463.4.tar.gz
-# sudo mv -fv ~/Downloads/idea-IU-135.480 /opt/
-# sudo mv -fv ~/Downloads/idea-IU-135.815 /opt/
-# sudo mv -fv ~/Downloads/idea-IU-138.1696.2 /opt/
-# sudo mv -fv ~/Downloads/idea-IU-138.2458.8 /opt/;
-# sudo mv -fv ~/Downloads/idea-IU-139.223.8 /opt/;
-# sudo mv -fv ~/Downloads/idea-IU-139.463.4 /opt/;
-# sudo mv -fv ~/Downloads/idea-IU-139.659.2 /opt/;
-# sudo mv -fv ~/Downloads/idea-IU-139.791.2 /opt/;
-# sudo mv -fv ~/Downloads/idea-IU-139.1117.1 /opt/;
+# idea 15
+wget -O - http://download.jetbrains.com/idea/ideaIU-142.3728.3.tar.gz | tar zxf -;
+
 # sudo mv -fv ~/Downloads/idea-IU-140.2493.5 /opt/;
-sudo mv -fv ~/Downloads/idea-IU-140.2683.2 /opt/;
+# sudo mv -fv ~/Downloads/idea-IU-140.2683.2 /opt/;
+sudo mv -fv ~/Downloads/idea-IU-141.2311.1 /opt/;
+sudo mv -fv ~/Downloads/idea-IU-142.3728.3 /opt/;
 
 # 2.1 Create a symlink
-#sudo ln -snf /opt/idea-IU-135.480/bin/idea.sh /usr/bin/idea
-#sudo ln -snf /opt/idea-IU-135.815/bin/idea.sh /usr/bin/idea 
-#sudo ln -snf /opt/idea-IU-138.1696.2/bin/idea.sh /usr/bin/idea
-#sudo ln -snf /opt/idea-IU-138.1696.2 /opt/idea14 
-
-# sudo ln -snf /opt/idea-IU-138.2210.3/bin/idea.sh /usr/bin/idea;
-# sudo ln -snf /opt/idea-IU-138.2210.3 /opt/idea14;
-
-# sudo ln -snf /opt/idea-IU-138.2458.8 /opt/idea14;
-# sudo ln -snf /opt/idea-IU-139.223.8 /opt/idea14;
-# sudo ln -snf /opt/idea-IU-139.463.4 /opt/idea14;
-# sudo ln -snf /opt/idea-IU-139.659.2 /opt/idea14;
-# sudo ln -snf /opt/idea-IU-139.1117.1 /opt/idea14;
 # sudo ln -snf /opt/idea-IU-140.2493.5 /opt/idea14;
-sudo ln -snf /opt/idea-IU-140.2683.2 /opt/idea14;
+# sudo ln -snf /opt/idea-IU-140.2683.2 /opt/idea14;
+sudo ln -snf /opt/idea-IU-141.2311.1 /opt/idea14;
+sudo ln -snf /opt/idea-IU-142.3728.3 /opt/idea15;
 
 # sudo ln -snf /opt/idea-IU-138.2458.8/bin/idea.sh /usr/bin/idea;
 sudo ln -snf /opt/idea14/bin/idea.sh /usr/bin/idea;
+sudo ln -snf /opt/idea15/bin/idea.sh /usr/bin/idea15;
 
 rm -fv ~/Desktop/idea14.desktop;
-# 2.2 Create a Desktop shortcut
+rm -fv ~/Desktop/idea15.desktop;
+
+# 2.2 Create a Desktop shortcut(s)
 cat << EOF >> ~/Desktop/idea14.desktop
 [Desktop Entry]
 Version=1.0
@@ -135,9 +109,27 @@ StartupNotify=true
 Actions=Window;Document;
 EOF
 
+cat << EOF >> ~/Desktop/idea15.desktop
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IntelliJ IDEA 15 EAP
+GenericName=Text Editor
+Comment=Sophisticated text editor for code, markup and prose
+Exec=/usr/bin/idea15 %F
+Terminal=false
+MimeType=text/plain;
+Icon=/opt/idea15/bin/idea.png
+Categories=TextEditor;Development;IDE;
+StartupNotify=true
+Actions=Window;Document;
+EOF
+
 chmod 755 ~/Desktop/idea14.desktop;
+chmod 755 ~/Desktop/idea15.desktop;
 
 mkdir -p ~/.IntelliJIdea14/config/fileTemplates/includes
+mkdir -p ~/.IntelliJIdea15/config/fileTemplates/includes
 ## Includes:
 cat << EOF >> ~/.IntelliJIdea14/config/fileTemplates/includes/File\ Header.java
 /**
@@ -150,7 +142,19 @@ cat << EOF >> ~/.IntelliJIdea14/config/fileTemplates/includes/File\ Header.java
  */
 EOF
 
+cat << EOF >> ~/.IntelliJIdea15/config/fileTemplates/includes/File\ Header.java
+/**
+ * Created by \${USER} on \${YEAR}-\${MONTH}-\${DAY}.
+ * Package: \${PACKAGE_NAME}
+ * Project: \${PROJECT_NAME}
+ * File: \${NAME}.java
+ * ...
+ * Copyright (c) \${YEAR} Company, Inc. All rights reserved.
+ */
+EOF
+
 sudo cp -v ~/Desktop/idea14.desktop /usr/share/applications/
+sudo cp -v ~/Desktop/idea15.desktop /usr/share/applications/
 }
 
 # 3. Install latest Git (2.1.0 at this moment)
@@ -263,7 +267,7 @@ install_gradle(){
 	# wget http://services.gradle.org/distributions/gradle-1.11-all.zip
 	# wget https://services.gradle.org/distributions/gradle-1.12-all.zip
 	# wget https://services.gradle.org/distributions/gradle-2.0-all.zip
-	wget https://services.gradle.org/distributions/gradle-2.1-all.zip
+	wget https://services.gradle.org/distributions/gradle-2.5-all.zip
 	# unzip gradle-1.11-all.zip
 	# unzip gradle-1.12-all.zip
 	# unzip gradle-2.0-all.zip
@@ -310,22 +314,23 @@ install_java8(){
 	# JDK 8
 	cd ~/Downloads
 	pwd
-	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u5-b13/jdk-8u5-linux-x64.rpm"
-	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u20-b26/jdk-8u20-linux-x64.rpm";
 	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u25-b17/jdk-8u25-linux-x64.rpm";
-	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u31-b13/jdk-8u31-linux-x64.rpm";
-	
-	# sudo rpm -Uvh jdk-8u5-linux-x64.rpm
-	# sudo rpm -Uvh jdk-8u20-linux-x64.rpm;
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u31-b13/jdk-8u31-linux-x64.rpm";
+	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.rpm";
+	# http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.rpm
+
 	# sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
-	sudo rpm -Uvh jdk-8u31-linux-x64.rpm;
+	# sudo rpm -Uvh jdk-8u31-linux-x64.rpm;
+	# sudo rpm -Uvh jdk-8u40-linux-x64.rpm;
+	sudo rpm -Uvh jdk-8u51-linux-x64.rpm
 
 	# echo -e '3\n' | sudo alternatives --config java;
 	
 	### http://www.if-not-true-then-false.com/2014/install-oracle-java-8-on-fedora-centos-rhel/
-	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_20/bin/java 200000;
 	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_25/bin/java 200000;
-	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_31/bin/java 200000;
+	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_31/bin/java 200000;
+	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_51/bin/java 200000;
+	
 	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.8.0_20/bin/javaws 200000; 
 	## Java Browser (Mozilla) Plugin 32-bit ##
 	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.8.0_20/jre/lib/i386/libnpjp2.so 200000; 
