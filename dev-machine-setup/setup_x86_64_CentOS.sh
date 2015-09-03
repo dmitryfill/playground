@@ -322,7 +322,7 @@ install_java8(){
 	# sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
 	# sudo rpm -Uvh jdk-8u31-linux-x64.rpm;
 	# sudo rpm -Uvh jdk-8u40-linux-x64.rpm;
-	sudo rpm -Uvh jdk-8u51-linux-x64.rpm
+	sudo rpm -Uvh jdk-8u51-linux-x64.rpm;
 
 	# echo -e '3\n' | sudo alternatives --config java;
 	
@@ -330,7 +330,7 @@ install_java8(){
 	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_25/bin/java 200000;
 	# sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_31/bin/java 200000;
 	sudo alternatives --install /usr/bin/java java /usr/java/jdk1.8.0_51/bin/java 200000;
-	
+
 	# sudo alternatives --install /usr/bin/javaws javaws /usr/java/jdk1.8.0_20/bin/javaws 200000; 
 	## Java Browser (Mozilla) Plugin 32-bit ##
 	# sudo alternatives --install /usr/lib/mozilla/plugins/libjavaplugin.so libjavaplugin.so /usr/java/jdk1.8.0_20/jre/lib/i386/libnpjp2.so 200000; 
@@ -485,6 +485,7 @@ install_hadoop_tools(){
 	# wget -O - http://psg.mtu.edu/pub/apache/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.4.tgz | tar zxf -
 	# wget -O - http://www.apache.org/dist/hadoop/common/hadoop-2.5.1/hadoop-2.5.1.tar.gz | tar zxf -
 	wget -O - http://www.apache.org/dist/hadoop/common/hadoop-2.6.0/hadoop-2.6.0.tar.gz | tar zxf -
+	wget -O - http://www.apache.org/dist/hadoop/core/hadoop-2.7.1/hadoop-2.7.1.tar.gz | tar xzf -
 	# wget -O - http://www.apache.org/dist/spark/spark-1.1.0/spark-1.1.0-bin-hadoop2.4.tgz | tar zxf -
 	wget -O - http://www.apache.org/dist/spark/spark-1.2.0/spark-1.2.0-bin-hadoop2.4.tgz | tar zxf -
 

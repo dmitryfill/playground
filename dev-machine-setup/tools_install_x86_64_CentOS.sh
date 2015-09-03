@@ -133,12 +133,21 @@ install_cdh5(){
 install_kafka(){
 	clear
 	# 2. Get Kafka
-	cd ~/Downloads
+	cd ~/opt/
 	pwd
 	# wget https://www.apache.org/dyn/closer.cgi?path=/kafka/0.8.1/kafka_2.10-0.8.1.tgz
-	wget ftp://apache.mirrors.tds.net/pub/apache.org/kafka/0.8.1/kafka_2.9.2-0.8.1.tgz
-	tar xvzf kafka_2.9.2-0.8.1.tgz
-	sudo mv -f ~/Downloads/kafka_2.9.2-0.8.1/ /opt/
+	# wget ftp://apache.mirrors.tds.net/pub/apache.org/kafka/0.8.1/kafka_2.9.2-0.8.1.tgz
+	wget -O - http://archive.apache.org/dist/kafka/0.8.2.1/kafka_2.10-0.8.2.1.tgz | tar xvzf -
+
+	# http://www.slideshare.net/miguno/apache-kafka-08-basic-training-verisign
+	# See page 66 for JVM tunning
+	# Silver bullet is new G1 “garbage-first” garbage collector
+	# Available since JDK7u4. 
+	# Substantial improvement over all previous GC’s, at least for Kafka.
+	# $ java -Xms4g -Xmx4g -XX:PermSize=48m -XX:MaxPermSize=48m -XX:+UseG1GC -XX:MaxGCPauseMillis=20 -XX:InitiatingHeapOccupancyPercent=35
+	# Key candidates for tuning: page 67 
+	# num.io.threads should be >= #disks (start testing with == #disks) 
+	# num.network.threads adjust it based on (concurrent) #producers, #consumers, and replication factor
 
 	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-0.properties
 	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-1.properties
@@ -343,6 +352,10 @@ vrrp_instance VI_1 {
 }
 EOF
 
+	echo 'net.ipv4.ip_nonlocal_bind=1' >> /etc/sysctl.conf
+
+	sysctl -p
+
 	# FirewallD could be disabled completely instead of adding all possible ports
 	sudo systemctl disable firewalld.service
 	sudo systemctl stop firewalld.service
@@ -352,7 +365,7 @@ EOF
 
 	sudo systemctl start keepalived
 	sudo systemctl start haproxy
-	
+
 # systemctl status haproxy
 # haproxy.service - HAProxy Load Balancer
 #    Loaded: loaded (/usr/lib/systemd/system/haproxy.service; enabled)
@@ -469,7 +482,7 @@ install_build(){
 
 install_cassandra(){
 	# http://planetcassandra.org/blog/installing-the-cassandra-spark-oss-stack/
-	cd ~/opt/
+	cd /opt/
 	pwd
 	sudo yum install epel-release -y
 	# sudo yum group install "Development Tools" -y
@@ -478,9 +491,10 @@ install_cassandra(){
 	install_java7
 
 	# wget -O - http://www.apache.org/dist/cassandra/2.1.1/apache-cassandra-2.1.1-bin.tar.gz | tar zxf -
-	wget -O - http://www.apache.org/dist/cassandra/2.1.2/apache-cassandra-2.1.2-bin.tar.gz | tar zxf -
+	# wget -O - http://www.apache.org/dist/cassandra/2.1.2/apache-cassandra-2.1.2-bin.tar.gz | tar zxf -
+	wget -O - http://archive.apache.org/dist/cassandra/2.2.0/apache-cassandra-2.2.0-bin.tar.gz | tar zxf -
 
-	sudo ln -snf /opt/apache-cassandra-2.1.2/ /opt/cassandra
+	sudo ln -snf /opt/apache-cassandra-2.2.0/ /opt/cassandra
 
 	sudo mkdir -p /srv/cassandra/{log,data,commitlogs,saved_caches}
 	(grep -q '^cassandra:' /etc/passwd) || useradd -c "Apache Cassandra" -s /bin/bash -d /srv/cassandra cassandra
@@ -565,7 +579,7 @@ gpgcheck = 0
 EOF
 
 	sudo yum update -y
-	sudo yum install -y dsc21
+	sudo yum install -y dsc22
 	sudo yum install -y cassandra21-tools
 	sudo yum install -y datastax-agent
 
@@ -615,11 +629,43 @@ perl -i.bak -pe "
 
 }
 
-install_kafka() {
-	cd ~/Downloads
-	pwd
+install_ambari(){
+	# Prereqs
+	sudo yum install -y epel-release wget curl git svn nano docker ntp ntpdate ntp-doc system-storage-manager net-tools java-1.7.0-openjdk-devel.x86_64
+	sudo yum install -y java-1.8.0-openjdk-devel.x86_64
 
-	wget -O - http://www.apache.org/dist/kafka/0.8.2-beta/kafka_2.10-0.8.2-beta.tgz | tar zxf -
+	sudo systemctl disable firewalld.service
+   	sudo systemctl stop firewalld.service
+   	sudo systemctl status firewalld.service
+
+	sudo systemctl status docker
+	sudo systemctl enable docker
+	sudo systemctl start docker
+
+	sudo systemctl status ntpd
+	sudo systemctl enable ntpd
+	sudo systemctl start ntpd
+	sudo systemctl status ntpd
+
+	# Set global ll='ls -lahGF --color'
+	sed -i 's/ls -l --color/ls -lahGF --color/g' /etc/profile.d/colorls.sh
+
+	# https://cwiki.apache.org/confluence/display/AMBARI/Install+Ambari+2.1.0+from+Public+Repositories
+	cd /etc/yum.repos.d/
+	
+	# (Redhat / CentOS / Oracle) 6
+	# http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.1.0/ambari.repo
+	# http://public-repo-1.hortonworks.com/ambari/centos6/2.x/updates/2.1.1/ambari.repo
+
+	# (Redhat / CentOS / Oracle) 7
+	# wget http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.1.0/ambari.repo
+	sudo wget -O /etc/yum.repos.d/ambari.repo http://public-repo-1.hortonworks.com/ambari/centos7/2.x/updates/2.1.1/ambari.repo
+
+	sudo yum install ambari-server
+
+	sudo ambari-server setup
+
+	sudo ambari-server start 
 }
 
 install_mesos_aurora(){
