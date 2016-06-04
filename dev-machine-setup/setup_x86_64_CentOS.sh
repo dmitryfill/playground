@@ -125,8 +125,25 @@ StartupNotify=true
 Actions=Window;Document;
 EOF
 
+cat << EOF >> ~/Desktop/idea16.desktop
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=IntelliJ IDEA 2016
+GenericName=Text Editor
+Comment=Sophisticated text editor for code, markup and prose
+Exec=/usr/bin/idea.sh %F
+Terminal=false
+MimeType=text/plain;
+Icon=/opt/idea16/bin/idea.png
+Categories=TextEditor;Development;IDE;
+StartupNotify=true
+Actions=Window;Document;
+EOF
+
 chmod 755 ~/Desktop/idea14.desktop;
 chmod 755 ~/Desktop/idea15.desktop;
+chmod 755 ~/Desktop/idea16.desktop;
 
 mkdir -p ~/.IntelliJIdea14/config/fileTemplates/includes
 mkdir -p ~/.IntelliJIdea15/config/fileTemplates/includes
@@ -319,6 +336,9 @@ install_java8(){
 	wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.rpm";
 	# http://download.oracle.com/otn-pub/java/jdk/8u51-b16/jdk-8u51-linux-x64.rpm
 
+	# wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jre-8u60-linux-x64.rpm";
+	# http://download.oracle.com/otn-pub/java/jdk/8u60-b27/jre-8u60-linux-x64.rpm
+
 	# sudo rpm -Uvh jdk-8u25-linux-x64.rpm;
 	# sudo rpm -Uvh jdk-8u31-linux-x64.rpm;
 	# sudo rpm -Uvh jdk-8u40-linux-x64.rpm;
@@ -495,6 +515,10 @@ install_misc_tools() {
 	sudo yum install -y kernel-devel qt4-devel 
 	sudo rpm -Uvh http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3-4.3.18_96516_el7-1.x86_64.rpm;
 	sudo rpm -Uvh https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5_x86_64.rpm;
+
+	# Linux Integration Services Version 4.0 for Hyper-V
+	# https://www.microsoft.com/en-us/download/details.aspx?id=46842
+	wget -O - http://download.microsoft.com/download/F/C/2/FC210204-06E9-4E3B-9B50-08CF5FAB09D9/lis4-0-11.tar.gz | tar xzvf -
 }
 
 # Evaluating command line argument

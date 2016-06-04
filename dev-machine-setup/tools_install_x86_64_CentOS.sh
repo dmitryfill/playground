@@ -149,6 +149,11 @@ install_kafka(){
 	# num.io.threads should be >= #disks (start testing with == #disks) 
 	# num.network.threads adjust it based on (concurrent) #producers, #consumers, and replication factor
 
+	# OS tunning - http://www.michael-noll.com/blog/2013/03/13/running-a-multi-broker-apache-kafka-cluster-on-a-single-node/
+	# increase open file handles
+	# /etc/security/limits.conf
+	# kafka    -    nofile    98304
+
 	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-0.properties
 	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-1.properties
 	#bash /opt/kafka_2.9.2-0.8.1/bin/kafka-server-start.sh /opt/kafka_2.9.2-0.8.1/config/server-2.properties	
